@@ -1,5 +1,6 @@
 const knex = require('knex');
 const { db } = require('../config');
+const HTTPError = require('../utils/httpError');
 
 const client = knex(db);
 
@@ -16,6 +17,21 @@ class Databse {
 
   static async prepareDatabase() {
     console.log('preparing db');
+  }
+
+  static async getReciever(id) {
+    try {
+      const user = await client('recievers')
+        .select(['id', 'login', 'address', 'phone'])
+        .where({ id });
+
+      if (!user.length) throw new HTTPError('Reciever wasn`t found', 404);
+
+      return user[0];
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
   }
 }
 
