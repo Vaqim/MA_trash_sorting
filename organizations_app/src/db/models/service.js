@@ -46,7 +46,7 @@ async function updateServiceById(id, data) {
 
 async function deleteServiceById(id) {
   try {
-    const timestamp = Date.now()
+    const timestamp = new Date()
 
     await knex('services').update({deleted_at: timestamp}).where({ id })
 

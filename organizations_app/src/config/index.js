@@ -1,11 +1,11 @@
-require('dotenv').config()
+require('dotenv').config({ path: `${process.env.PWD}/.env` })
 
 const config = {
   port: process.env.PORT || 3000,
   db: {
     client: 'postgresql',
     connection: {
-      name: process.env.DB_USER || '',
+      name: process.env.DB_NAME || '',
       password: process.env.DB_PASSWORD || '',
       host: process.env.DB_HOST || '',
       user: process.env.DB_USER || '',

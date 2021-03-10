@@ -4,14 +4,14 @@ const asyncHandler = require('express-async-handler');
 
 const services = Router()
 
-service.get('', asyncHandler((req, res) => serviceController.getServices(req, res)))
+services.get('', asyncHandler((req, res) => serviceController.getServices(req, res)))
 
-service.get('/:id', asyncHandler((req, res) => serviceController.getService(req, res)))
+services.get('/:id', asyncHandler((req, res) => serviceController.getService(req, res)))
 
-service.post('', asyncHandler((req, res) => serviceController.createService(req, res)))
+services.post('', asyncHandler((req, res) => serviceController.createService(req, res)))
 
-service.put('/:id', asyncHandler((req, res) => serviceController.updateService(req, res)))
+services.put('/:id', asyncHandler((req, res) => serviceController.updateService(req, res)))
 
-service.delete('/:id', asyncHandler((req, res) => serviceController.deleteService(req, res)))
+services.delete('/:id', asyncHandler((req, res) => serviceController.deleteService(req, res)))
 
 module.exports = services

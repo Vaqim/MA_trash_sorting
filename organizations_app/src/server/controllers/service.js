@@ -4,7 +4,7 @@ async function getServices(req, res) {
   try {
     const services = await db.getServices()
 
-    res.json(serrvices)
+    res.json(services)
   } catch (error) {
     console.log(error.message || error)
     throw error
@@ -18,7 +18,7 @@ async function getService(req, res) {
 
     const services = await db.getServiceById(id)
 
-    res.json(serrvices)
+    res.json(services)
   } catch (error) {
     console.log(error.message || error)
     throw error
@@ -59,9 +59,9 @@ async function deleteService(req, res) {
     const { id } = req.params
     if(!id) throw new Error('Id is not defined!')
 
-    await db.deleteServiceById()
+    await db.deleteServiceById(id)
 
-    res.status(202)
+    res.status(202).send()
   } catch (error) {
     console.log(error.message || error)
     throw error

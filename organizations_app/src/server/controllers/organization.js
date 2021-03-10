@@ -17,7 +17,7 @@ async function getOrganization(req, res) {
     const { id } = req.params
     if(!id) throw new Error('Id is not defined!')
 
-    const org = await db.getOrganizationsById(id)
+    const org = await db.getOrganizationById(id)
 
     res.json(org)
   } catch (error) {
@@ -69,4 +69,4 @@ async function getServicesByOrganization(req, res) {
   }
 }
 
-module.exports = {getAllOrganizations, getOrganization, updateOrganization, getServicesByOrganization}
+module.exports = {getAllOrganizations, createOrganization, getOrganization, updateOrganization, getServicesByOrganization}
