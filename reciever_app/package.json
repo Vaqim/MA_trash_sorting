@@ -5,7 +5,13 @@
   "main": "./src/app.js",
   "scripts": {
     "start": "node ./src/app.js",
-    "dev": "nodemon ./src/app.js"
+    "dev": "nodemon ./src/app.js",
+    "db:migration:create": "./node_modules/.bin/knex --knexfile=./src/db/knexfile.js migrate:make",
+    "db:migration:up": "./node_modules/.bin/knex --knexfile=./src/db/knexfile.js migrate:up",
+    "db:migration:down": "./node_modules/.bin/knex --knexfile=./src/db/knexfile.js migrate:down",
+    "db:migration:latest": "./node_modules/.bin/knex --knexfile=./src/db/knexfile.js migrate:latest",
+    "db:seed:make": "./node_modules/.bin/knex --knexfile=./src/db/knexfile.js seed:make",
+    "db:seed:run": "./node_modules/.bin/knex --knexfile=./src/db/knexfile.js seed:run"
   },
   "keywords": [],
   "author": "Vaqim",
