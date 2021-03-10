@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 
 const client = require('./routes/clients');
+const errorHandler = require('./middlewares/errorHandler');
 
 const app = express();
 
@@ -16,5 +17,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/client', client);
+
+app.use(errorHandler);
 
 module.exports = app;

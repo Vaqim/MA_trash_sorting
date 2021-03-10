@@ -1,5 +1,6 @@
 const knex = require('knex');
 const { db } = require('../config');
+const HTTPError = require('../utils/httpError');
 
 const client = knex(db);
 
@@ -23,10 +24,13 @@ class Database {
       const user = await client('clients')
         .select(['id', 'login', 'name', 'phone', 'balance'])
         .where({ id });
+
+      if (!user.length) throw new HTTPError('User wasn`t found', 404);
+
       return user[0];
     } catch (error) {
-      console.error(error);
-      throw new Error('Can`t get client');
+      console.error(error.message);
+      throw error;
     }
   }
 
@@ -43,7 +47,7 @@ class Database {
       return user[0];
     } catch (error) {
       console.error(error);
-      throw new Error('Can`t create client');
+      throw new HTTPError('User wasn`t created', 409);
     }
   }
 }

@@ -7,16 +7,12 @@ const client = Router();
 
 client.get(
   '/:id',
-  aHdlr(async (req, res) => {
-    await clientsController.getClient(req, res);
-  }),
+  aHdlr(async (req, res) => clientsController.getClient(req, res)),
 );
 
 client.post(
   '/',
-  aHdlr(async (req, res) => {
-    await clientsController.createClient(req, res);
-  }),
+  aHdlr(async (req, res) => clientsController.createClient(req, res)),
 ); // create client
 client.patch('/:id'); // edit client
 
