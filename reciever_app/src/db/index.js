@@ -33,6 +33,19 @@ class Databse {
       throw error;
     }
   }
+
+  static async createReciever(userData) {
+    try {
+      const reciever = await client('recievers')
+        .insert(userData)
+        .returning(['id', 'login', 'address', 'phone']);
+
+      return reciever[0];
+    } catch (error) {
+      console.error(error);
+      throw new HTTPError('Recieve wasn`t created', 409);
+    }
+  }
 }
 
 module.exports = Databse;

@@ -10,4 +10,9 @@ reciever.get(
   aHdlr((req, res) => recieverController.getReciever(req, res)),
 );
 
+reciever.post(
+  '/',
+  aHdlr((req, res) => recieverController.createReciever(req, res)),
+);
+
 module.exports = reciever;
