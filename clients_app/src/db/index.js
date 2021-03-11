@@ -50,6 +50,19 @@ class Database {
       throw new HTTPError('User wasn`t created', 409);
     }
   }
+
+  static async editClient(id, userData) {
+    try {
+      const user = await client('clients')
+        .where({ id })
+        .update(userData, ['id', 'login', 'name', 'phone', 'balance']);
+
+      return user[0];
+    } catch (error) {
+      console.error(error);
+      throw new HTTPError('User wasn`t updated', 409);
+    }
+  }
 }
 
 module.exports = Database;

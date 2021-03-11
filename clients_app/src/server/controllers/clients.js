@@ -1,5 +1,6 @@
 const db = require('../../db');
 const HTTPError = require('../../utils/httpError');
+const client = require('../routes/clients');
 
 async function getClient(req, res) {
   try {
@@ -32,7 +33,25 @@ async function createClient(req, res) {
   }
 }
 
+async function editClient(req, res) {
+  try {
+    if (!req.params.id) throw new HTTPError('Client ID required', 400);
+
+    delete req.body.id;
+
+    if (!Object.keys(req.body).length) throw new HTTPError('New client data required', 400);
+
+    const user = await db.editClient(req.params.id, req.body);
+
+    res.json(user);
+  } catch (error) {
+    res.status(error.status).json({ error: error.message });
+    console.error(error);
+  }
+}
+
 module.exports = {
   getClient,
   createClient,
+  editClient,
 };

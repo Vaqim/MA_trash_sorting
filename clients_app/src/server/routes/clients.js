@@ -13,9 +13,11 @@ client.get(
 client.post(
   '/',
   aHdlr(async (req, res) => clientsController.createClient(req, res)),
-); // create client
-client.patch('/:id'); // edit client
+);
 
-client.get('/'); // get all clients
+client.put(
+  '/:id',
+  aHdlr(async (req, res) => clientsController.editClient(req, res)),
+);
 
 module.exports = client;
