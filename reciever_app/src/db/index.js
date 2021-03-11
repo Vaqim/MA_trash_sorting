@@ -46,6 +46,19 @@ class Databse {
       throw new HTTPError('Recieve wasn`t created', 409);
     }
   }
+
+  static async editReciever(id, userData) {
+    try {
+      const reciever = await client('recievers')
+        .where({ id })
+        .update(userData, ['id', 'login', 'address', 'phone']);
+
+      return reciever[0];
+    } catch (error) {
+      console.error(error);
+      throw new HTTPError('Recieve wasn`t updated', 409);
+    }
+  }
 }
 
 module.exports = Databse;

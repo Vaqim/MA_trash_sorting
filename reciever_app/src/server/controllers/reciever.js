@@ -28,7 +28,25 @@ async function createReciever(req, res) {
   }
 }
 
+async function editReciever(req, res) {
+  try {
+    if (!req.params.id) throw new HTTPError('Reciever ID required', 400);
+
+    delete req.body.id;
+
+    if (!Object.keys(req.body).length) throw new HTTPError('New reciever data required', 400);
+
+    const reciever = await db.editReciever(req.params.id, req.body);
+
+    res.json(reciever);
+  } catch (error) {
+    res.status(error.status).json({ error: error.message });
+    console.error(error);
+  }
+}
+
 module.exports = {
   getReciever,
   createReciever,
+  editReciever,
 };
