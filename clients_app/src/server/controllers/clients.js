@@ -1,6 +1,5 @@
 const db = require('../../db');
 const HTTPError = require('../../utils/httpError');
-const client = require('../routes/clients');
 
 async function getClient(req, res) {
   try {
