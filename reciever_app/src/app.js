@@ -2,7 +2,7 @@ const { createServer } = require('http');
 
 const { host, port } = require('./config');
 const app = require('./server');
-const { testConnection, prepareDatabase } = require('./db');
+const { testConnection } = require('./db');
 
 const server = createServer(app);
 
@@ -46,7 +46,6 @@ function enableGracefulExit() {
 async function boot() {
   enableGracefulExit();
   await testConnection();
-  await prepareDatabase();
   start();
 }
 
