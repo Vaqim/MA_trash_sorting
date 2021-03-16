@@ -1,51 +1,52 @@
+const jwt = require('jsonwebtoken');
 const { generateError } = require('../../service/error');
-const { generateAccessToken, generateRefreshToken } = require('../../service/auth')
-const { clientsController, organizationController, recieverController } = require('../controllers');
+const { refreshSecret } = require('../../config');
+const { generateAccessToken, generateRefreshToken } = require('../../service/auth');
+const { clientsController, organizationController, recieverController } = require('.');
 
 async function registerUser(req, res) {
   try {
-    const {userType} = req.body;
+    const { userType } = req.body;
 
     let user;
 
-    switch(userType) {
+    switch (userType) {
       case 'client':
-        user = await clientsController.createClient(req, res)
-        break
+        user = await clientsController.createClient(req, res);
+        break;
       case 'organization':
-        user = await organizationController.createOrganization(req, res)
-        break
+        user = await organizationController.createOrganization(req, res);
+        break;
       case 'reciever':
-        user = await recieverController.createReciever(req, res)
-        break
+        user = await recieverController.createReciever(req, res);
+        break;
       default:
-        throw generateError('User type is not defined!', 'BadRequestError')
+        throw generateError('User type is not defined!', 'BadRequestError');
     }
 
-    res.status(201).send(user)
-
+    res.status(201).send(user);
   } catch (error) {
-    console.log(error.message || error)
-    throw error
+    console.log(error.message || error);
+    throw error;
   }
 }
 
 async function loginUser(req, res) {
   try {
-    const {userType} = req.body;
-
-    switch(userType) {
+    const { userType } = req.body;
+    let user;
+    switch (userType) {
       case 'client':
-        //TODO 
-        break
+        // TODO
+        break;
       case 'organization':
-        //TODO 
-        break
+        user = await organizationController.getOrganizationByParams(req, res);
+        break;
       case 'reciever':
-        //TODO 
-        break
+        // TODO
+        break;
       default:
-        throw generateError( 'User type is not defined!', 'BadRequestError')
+        throw generateError('User type is not defined!', 'BadRequestError');
     }
 
     const accessToken = generateAccessToken(user);
@@ -53,12 +54,12 @@ async function loginUser(req, res) {
 
     res.json({ accessToken, refreshToken });
   } catch (error) {
-    console.log(error.message || error)
-    throw error
+    console.log(error.message || error);
+    throw error;
   }
 }
 
-function refreshToken(req, res) {
+function refreshAccessToken(req, res) {
   const refreshToken = req.body.token;
   if (!refreshToken) throw generateError('Invalid data!', 'BadRequestError');
   jwt.verify(refreshToken, refreshSecret, (err, user) => {
@@ -67,10 +68,10 @@ function refreshToken(req, res) {
       login: user.login,
       password: user.password,
       name: user.name,
-      phone: user.phone
+      phone: user.phone,
     });
     res.json({ accessToken: newAccessToken });
   });
 }
 
-module.exports = {registerUser, loginUser, refreshToken}
+module.exports = { registerUser, loginUser, refreshAccessToken };

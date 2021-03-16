@@ -1,40 +1,40 @@
-const apiAdapter = require('../../service/apiAdapter')
+const apiAdapter = require('../../service/apiAdapter');
 
-// Microservice URL, used to send requests 
-const BASE_URL
-const api = apiAdapter(BASE_URL)
+// Microservice URL, used to send requests
+const BASE_URL = 0;
+const api = apiAdapter(BASE_URL);
 
 async function calculatePoints(req, res) {
   try {
-    const points = await api.post(req.path, req.body)
+    const points = await api.post(req.path, req.body);
 
-    res.send(points)
+    res.send(points);
   } catch (error) {
-    console.log(error.message || error)
-    throw error
+    console.log(error.message || error);
+    throw error;
   }
-} 
+}
 
 async function addPoints(req, res) {
   try {
-    await api.post(req.path, req.body)
+    await api.post(req.path, req.body);
 
-    res.status(202).send()
+    res.status(202).send();
   } catch (error) {
-    console.log(error.message || error)
-    throw error
+    console.log(error.message || error);
+    throw error;
   }
 }
 
 async function spendPoints(req, res) {
   try {
-    await api.post(req.path, req.body)
+    await api.post(req.path, req.body);
 
-    res.status(202).send()
+    res.status(202).send();
   } catch (error) {
-    console.log(error.message || error)
-    throw error
+    console.log(error.message || error);
+    throw error;
   }
 }
 
-module.exports = { calculatePoints, addPoints, spendPoints }
+module.exports = { calculatePoints, addPoints, spendPoints };

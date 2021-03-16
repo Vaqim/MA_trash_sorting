@@ -5,8 +5,14 @@ const { clientsController } = require('../controllers');
 
 const client = Router();
 
-client.get('/:id', asyncHandler(async (req, res) => clientsController.getClient(req, res)))
+client.get(
+  '/:id',
+  asyncHandler(async (req, res) => clientsController.getClient(req, res)),
+);
 
-client.put('/:id', asyncHandler(async (req, res) => clientsController.editClient(req, res)))
+client.put(
+  '/:id',
+  asyncHandler(async (req, res) => clientsController.editClient(req, res)),
+);
 
-module.exports = client
+module.exports = client;

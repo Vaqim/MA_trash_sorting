@@ -1,4 +1,4 @@
-function errorHandler(err, req, res, next) {
+function errorHandler(err, req, res) {
   console.log(err);
   switch (err.name) {
     case 'BadRequestError':

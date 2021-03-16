@@ -17,11 +17,11 @@ function initializeGracefulShutdown(server) {
 
 async function prepareServer(server) {
   try {
-    initializeGracefulShutdown(server)
+    initializeGracefulShutdown(server);
   } catch (error) {
     console.error(`ERROR: ${error.message}`);
     throw error;
   }
 }
 
-module.exports = { prepareServer }
+module.exports = { prepareServer };

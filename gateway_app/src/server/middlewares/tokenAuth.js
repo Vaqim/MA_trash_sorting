@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { accessSecret } = require('../../config');
-const { generateError } = require('../../services/error');
+const { generateError } = require('../../service/error');
 
 function authentificateToken(req, res, next) {
   const token = req.headers.authorization.split(' ')[1];
