@@ -1,3 +1,3 @@
-const pointsController = require('./points')
+const pointsController = require('./points');
 
-module.exports = { pointsController }
+module.exports = { pointsController };
