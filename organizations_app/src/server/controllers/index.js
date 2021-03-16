@@ -1,4 +1,4 @@
-const organizationController = require('./organization')
-const serviceController = require('./service')
+const organizationController = require('./organization');
+const serviceController = require('./service');
 
-module.exports = {organizationController, serviceController}
+module.exports = { organizationController, serviceController };

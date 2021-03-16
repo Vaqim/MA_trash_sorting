@@ -1,4 +1,4 @@
-const { testConnection } = require('../db')
+const { testConnection } = require('../db');
 
 function initializeGracefulShutdown(server) {
   function shutdownHandler(error) {
@@ -19,12 +19,12 @@ function initializeGracefulShutdown(server) {
 
 async function prepareServer(server) {
   try {
-    await testConnection()
-    initializeGracefulShutdown(server)
+    await testConnection();
+    initializeGracefulShutdown(server);
   } catch (error) {
     console.error(`ERROR: ${error.message}`);
     throw error;
   }
 }
 
-module.exports = { prepareServer }
+module.exports = { prepareServer };

@@ -1,72 +1,94 @@
-const db = require('../../db/models/organization')
-const { getServicesByOrganizationId } = require('../../db/models/service')
+const db = require('../../db/models/organization');
+const { generateError } = require('../../service/error');
+const { getServicesByOrganizationId } = require('../../db/models/service');
 
 async function getAllOrganizations(req, res) {
   try {
-    const org = await db.getOrganizations()
+    const org = await db.getOrganizations();
 
-    res.json(org)
+    res.json(org);
   } catch (error) {
-    console.log(error.message || error)
-    throw error
+    console.log(error.message || error);
+    throw error;
+  }
+}
+
+async function getOrganizationByParams(req, res) {
+  try {
+    const { login, password } = req.body;
+    if (!login || !password) throw generateError('Login and password required!', 'BadRequestError');
+
+    const org = await db.getOrganizationByParams(req.body);
+
+    res.json(org);
+  } catch (error) {
+    console.log(error.message || error);
+    throw error;
   }
 }
 
 async function getOrganization(req, res) {
   try {
-    const { id } = req.params
-    if(!id) throw new Error('Id is not defined!')
+    const { id } = req.params;
+    if (!id) throw generateError('Id is not defined!', 'BadRequestError');
 
-    const org = await db.getOrganizationById(id)
+    const org = await db.getOrganizationById(id);
 
-    res.json(org)
+    res.json(org);
   } catch (error) {
-    console.log(error.message || error)
-    throw error
+    console.log(error.message || error);
+    throw error;
   }
 }
 
 async function createOrganization(req, res) {
   try {
-    const {name, login, password} = req.body
-    if(!name || !login || !password) throw new Error('Bad request!')
+    const { name, login, password } = req.body;
+    if (!name || !login || !password) throw generateError('Bad request!', 'BadRequestError');
 
-    const org = await db.createOrganization(req.body)
+    const org = await db.createOrganization(req.body);
 
-    res.json(org)
+    res.json(org);
   } catch (error) {
-    console.log(error.message || error)
-    throw error
+    console.log(error.message || error);
+    throw error;
   }
 }
 
 async function updateOrganization(req, res) {
   try {
-    const { id } = req.params
-    if(!id) throw new Error('Id is not defined!')
-    if(!Object.entries(req.body).length) throw new Error('Nothing to update!')
-    
-    const org = await db.updateOrganizationById(id, req.body)
+    const { id } = req.params;
+    if (!id) throw generateError('Id is not defined!', 'BadRequestError');
+    if (!Object.entries(req.body).length) throw generateError('Nothing to update!');
 
-    res.json(org)
+    const org = await db.updateOrganizationById(id, req.body);
+
+    res.json(org);
   } catch (error) {
-    console.log(error.message || error)
-    throw error
+    console.log(error.message || error);
+    throw error;
   }
 }
 
 async function getServicesByOrganization(req, res) {
   try {
-    const { id } = req.params
-    if(!id) throw new Error('Id is not defined!')
+    const { id } = req.params;
+    if (!id) throw generateError('Id is not defined!', 'BadRequestError');
 
-    const services = await getServicesByOrganizationId(id)
+    const services = await getServicesByOrganizationId(id);
 
-    res.json(services)
+    res.json(services);
   } catch (error) {
-    console.log(error.message || error)
-    throw error
+    console.log(error.message || error);
+    throw error;
   }
 }
 
-module.exports = {getAllOrganizations, createOrganization, getOrganization, updateOrganization, getServicesByOrganization}
+module.exports = {
+  getAllOrganizations,
+  createOrganization,
+  getOrganization,
+  updateOrganization,
+  getServicesByOrganization,
+  getOrganizationByParams,
+};

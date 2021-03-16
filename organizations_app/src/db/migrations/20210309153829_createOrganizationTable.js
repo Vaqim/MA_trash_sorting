@@ -1,4 +1,3 @@
-
 exports.up = async (knex) => {
   await knex.raw('create extension if not exists "uuid-ossp"');
   await knex.schema.createTable('organizations', (table) => {
@@ -8,7 +7,7 @@ exports.up = async (knex) => {
     table.string('password').notNullable();
     table.string('phone', 13).nullable();
     table.string('adress').nullable();
-    table.timestamps(true, true)
+    table.timestamps(true, true);
   });
 };
 

@@ -1,9 +1,9 @@
-const http = require('http')
-const app = require('./server')
-const { port } = require('./config')
-const { prepareServer } = require('./service/server')
+const http = require('http');
+const app = require('./server');
+const { port } = require('./config');
+const { prepareServer } = require('./service/server');
 
-const server = http.createServer(app)
+const server = http.createServer(app);
 
 async function boot() {
   await prepareServer(server);
