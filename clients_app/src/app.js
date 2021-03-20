@@ -2,32 +2,33 @@ const { createServer } = require('http');
 
 const { host, port } = require('./config');
 const app = require('./server');
-const { testConnection, prepareDatabase } = require('./db');
+const { testConnection } = require('./db');
+const logger = require('./logger')(__filename);
 
 const server = createServer(app);
 
 function start() {
-  server.listen(+port, host, () => console.log(`Server listening on ${host}:${port}`));
+  server.listen(+port, host, () => logger.info(`Server listening on ${host}:${port}`));
 }
 
 function stop(callback) {
   server.close((err) => {
     if (err) {
-      console.error(err, 'Failed to close server!');
+      logger.error(err, 'Failed to close server!');
       callback(err);
       return;
     }
 
-    console.log('Server has been stopped.');
+    logger.info('Server has been stopped.');
     callback();
   });
 }
 
 function enableGracefulExit() {
   const exitHandler = (error) => {
-    if (error) console.error(error);
+    if (error) logger.error(error, error.message);
 
-    console.log('Graceful stopping...');
+    logger.info('Graceful stopping...');
     stop(() => {
       process.exit();
     });
@@ -46,7 +47,6 @@ function enableGracefulExit() {
 async function boot() {
   enableGracefulExit();
   await testConnection();
-  await prepareDatabase();
   start();
 }
 

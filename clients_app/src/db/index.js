@@ -1,6 +1,7 @@
 const knex = require('knex');
 const { db } = require('../config');
 const HTTPError = require('../utils/httpError');
+const logger = require('../logger')(__filename);
 
 const client = knex(db);
 
@@ -8,15 +9,11 @@ class Database {
   static async testConnection() {
     try {
       await client.raw('SELECT NOW()');
-      console.log('Database connection created!');
+      logger.info('Database connection created!');
     } catch (error) {
-      console.error(error);
+      logger.error(error, error.message);
       throw new Error('ERROR: Test connection failed!');
     }
-  }
-
-  static async prepareDatabase() {
-    console.log('preparing db');
   }
 
   static async getClient(id) {
@@ -29,7 +26,7 @@ class Database {
 
       return user[0];
     } catch (error) {
-      console.error(error.message);
+      logger.warn(error, error.message);
       throw error;
     }
   }
@@ -46,7 +43,7 @@ class Database {
 
       return user[0];
     } catch (error) {
-      console.error(error);
+      logger.warn(error, error.message);
       throw new HTTPError('User wasn`t created', 409);
     }
   }
@@ -59,7 +56,7 @@ class Database {
 
       return user[0];
     } catch (error) {
-      console.error(error);
+      logger.warn(error, error.message);
       throw new HTTPError('User wasn`t updated', 409);
     }
   }

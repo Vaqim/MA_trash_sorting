@@ -1,5 +1,6 @@
 const db = require('../../db');
 const HTTPError = require('../../utils/httpError');
+const logger = require('../../logger')(__filename);
 
 async function getClient(req, res) {
   try {
@@ -11,7 +12,7 @@ async function getClient(req, res) {
     res.json(client);
   } catch (error) {
     res.status(error.status).json({ error: error.message });
-    console.error(error);
+    logger.warn(error, error.message);
   }
 }
 
@@ -28,7 +29,7 @@ async function createClient(req, res) {
     res.status(201).json(client);
   } catch (error) {
     res.status(error.status).json({ error: error.message });
-    console.error(error);
+    logger.warn(error, error.message);
   }
 }
 
@@ -45,7 +46,7 @@ async function editClient(req, res) {
     res.json(user);
   } catch (error) {
     res.status(error.status).json({ error: error.message });
-    console.error(error);
+    logger.warn(error, error.message);
   }
 }
 
