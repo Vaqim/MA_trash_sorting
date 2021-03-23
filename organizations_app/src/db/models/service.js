@@ -7,7 +7,7 @@ async function getServices() {
 
     return res;
   } catch (error) {
-    console.log(error.message || error);
+    logger.error(error.message || error);
     throw error;
   }
 }
@@ -18,7 +18,7 @@ async function getServiceById(id) {
 
     return res;
   } catch (error) {
-    console.log(error.message || error);
+    logger.error(error.message || error);
     throw error;
   }
 }
@@ -29,7 +29,7 @@ async function createOrganizationService(data) {
 
     return res;
   } catch (error) {
-    console.log(error.message || error);
+    logger.error(error.message || error);
     throw error;
   }
 }
@@ -40,7 +40,7 @@ async function updateServiceById(id, data) {
 
     return res;
   } catch (error) {
-    console.log(error.message || error);
+    logger.error(error.message || error);
     throw error;
   }
 }
@@ -53,7 +53,7 @@ async function deleteServiceById(id) {
 
     return true;
   } catch (error) {
-    console.log(error.message || error);
+    logger.error(error.message || error);
     throw error;
   }
 }
@@ -64,7 +64,7 @@ async function getServicesByOrganizationId(id) {
 
     return res;
   } catch (error) {
-    console.log(error.message || error);
+    logger.error(error.message || error);
     throw error;
   }
 }

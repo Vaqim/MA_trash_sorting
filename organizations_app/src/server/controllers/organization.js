@@ -51,7 +51,7 @@ async function createOrganization(req, res) {
 
     res.json(org);
   } catch (error) {
-    console.log(error.message || error);
+    logger.error(error.message || error);
     throw error;
   }
 }
@@ -66,7 +66,7 @@ async function updateOrganization(req, res) {
 
     res.json(org);
   } catch (error) {
-    console.log(error.message || error);
+    logger.error(error.message || error);
     throw error;
   }
 }
@@ -80,7 +80,7 @@ async function getServicesByOrganization(req, res) {
 
     res.json(services);
   } catch (error) {
-    console.log(error.message || error);
+    logger.error(error.message || error);
     throw error;
   }
 }
