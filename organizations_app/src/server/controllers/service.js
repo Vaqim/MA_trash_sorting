@@ -1,5 +1,6 @@
 const db = require('../../db/models/service');
 const { generateError } = require('../../service/error');
+const logger = require('../../logger')(__filename);
 
 async function getServices(req, res) {
   try {
@@ -7,7 +8,7 @@ async function getServices(req, res) {
 
     res.json(services);
   } catch (error) {
-    console.log(error.message || error);
+    logger.error(error.message || error);
     throw error;
   }
 }
@@ -21,7 +22,7 @@ async function getService(req, res) {
 
     res.json(services);
   } catch (error) {
-    console.log(error.message || error);
+    logger.error(error.message || error);
     throw error;
   }
 }
@@ -35,7 +36,7 @@ async function createService(req, res) {
 
     res.json(service);
   } catch (error) {
-    console.log(error.message || error);
+    logger.error(error.message || error);
     throw error;
   }
 }
@@ -43,14 +44,14 @@ async function createService(req, res) {
 async function updateService(req, res) {
   try {
     const { id } = req.params;
-    if (!id) throw new Error('Id is not defined!');
+    if (!id) throw generateError('Id is not defined!', 'BadRequestError');
     if (!Object.entries(req.body).length) throw generateError('Nothing to update!');
 
     const service = await db.updateServiceById(id, req.body);
 
     res.json(service);
   } catch (error) {
-    console.log(error.message || error);
+    logger.error(error.message || error);
     throw error;
   }
 }
@@ -64,7 +65,7 @@ async function deleteService(req, res) {
 
     res.status(202).send();
   } catch (error) {
-    console.log(error.message || error);
+    logger.error(error.message || error);
     throw error;
   }
 }

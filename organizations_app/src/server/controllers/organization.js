@@ -1,6 +1,7 @@
 const db = require('../../db/models/organization');
 const { generateError } = require('../../service/error');
 const { getServicesByOrganizationId } = require('../../db/models/service');
+const logger = require('../../logger')(__filename);
 
 async function getAllOrganizations(req, res) {
   try {
@@ -8,7 +9,7 @@ async function getAllOrganizations(req, res) {
 
     res.json(org);
   } catch (error) {
-    console.log(error.message || error);
+    logger.error(error.message || error);
     throw error;
   }
 }
@@ -22,7 +23,7 @@ async function getOrganizationByParams(req, res) {
 
     res.json(org);
   } catch (error) {
-    console.log(error.message || error);
+    logger.error(error.message || error);
     throw error;
   }
 }
@@ -36,7 +37,7 @@ async function getOrganization(req, res) {
 
     res.json(org);
   } catch (error) {
-    console.log(error.message || error);
+    logger.error(error.message || error);
     throw error;
   }
 }

@@ -1,4 +1,5 @@
 const { knex } = require('../index');
+const logger = require('../../logger')(__filename);
 
 async function getServices() {
   try {

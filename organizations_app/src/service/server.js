@@ -1,11 +1,12 @@
 const { testConnection } = require('../db');
+const logger = require('../logger')(__filename);
 
 function initializeGracefulShutdown(server) {
   function shutdownHandler(error) {
-    if (error) console.log('ERROR: ', error);
-    console.log('\nServer is closing...');
+    if (error) logger.error('ERROR: ', error);
+    logger.info('\nServer is closing...');
     server.close(() => {
-      console.log('Server closed!');
+      logger.info('Server closed!');
       process.exit();
     });
   }
@@ -22,7 +23,7 @@ async function prepareServer(server) {
     await testConnection();
     initializeGracefulShutdown(server);
   } catch (error) {
-    console.error(`ERROR: ${error.message}`);
+    logger.error(`ERROR: ${error.message}`);
     throw error;
   }
 }
