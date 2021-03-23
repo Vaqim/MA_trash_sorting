@@ -1,4 +1,4 @@
-const db = require('../../db');
+const db = require('../../db/client');
 const HTTPError = require('../../utils/httpError');
 const logger = require('../../logger')(__filename);
 
