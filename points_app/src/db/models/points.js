@@ -1,4 +1,5 @@
 const { knex } = require('../index');
+const logger = require('../../logger');
 
 async function addPoints(data) {
   try {
@@ -10,7 +11,7 @@ async function addPoints(data) {
 
     return true;
   } catch (error) {
-    console.log(error.message || error);
+    logger.error(error.message || error);
     throw error;
   }
 }
@@ -31,7 +32,7 @@ async function spendPoints(data) {
 
     return true;
   } catch (error) {
-    console.log(error.message || error);
+    logger.error(error.message || error);
     throw error;
   }
 }

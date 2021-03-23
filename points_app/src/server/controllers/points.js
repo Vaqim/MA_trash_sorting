@@ -1,6 +1,7 @@
 const calc = require('../../service/calculation');
 const db = require('../../db/models/points');
 const { generateError } = require('../../service/error');
+const logger = require('../../logger')(__filename);
 
 async function calculatePoints(req, res) {
   try {
@@ -12,7 +13,7 @@ async function calculatePoints(req, res) {
 
     res.json({ points: total });
   } catch (error) {
-    console.log(error.message || error);
+    logger.error(error.message || error);
     throw error;
   }
 }
@@ -26,7 +27,7 @@ async function addPoints(req, res) {
 
     res.status(202).send();
   } catch (error) {
-    console.log(error.message || error);
+    logger.error(error.message || error);
     throw error;
   }
 }
@@ -40,7 +41,7 @@ async function spendPoints(req, res) {
 
     res.status(202).send();
   } catch (error) {
-    console.log(error.message || error);
+    logger.error(error.message || error);
     throw error;
   }
 }
