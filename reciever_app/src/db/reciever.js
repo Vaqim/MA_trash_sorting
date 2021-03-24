@@ -1,5 +1,6 @@
 const HTTPError = require('../utils/httpError');
 const { client } = require('./index');
+const logger = require('../logger')(__filename);
 
 class RecieverDB {
   static async getReciever(id) {
@@ -12,7 +13,7 @@ class RecieverDB {
 
       return user[0];
     } catch (error) {
-      console.log(error);
+      logger.warn(error);
       throw error;
     }
   }
@@ -25,7 +26,7 @@ class RecieverDB {
 
       return reciever[0];
     } catch (error) {
-      console.error(error);
+      logger.warn(error);
       throw new HTTPError('Recieve wasn`t created', 409);
     }
   }
@@ -38,7 +39,7 @@ class RecieverDB {
 
       return reciever[0];
     } catch (error) {
-      console.error(error);
+      logger.warn(error);
       throw new HTTPError('Recieve wasn`t updated', 409);
     }
   }

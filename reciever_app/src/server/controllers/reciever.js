@@ -1,5 +1,6 @@
 const RecieverDB = require('../../db/reciever');
 const HTTPError = require('../../utils/httpError');
+const logger = require('../../logger')(__filename);
 
 async function getReciever(req, res) {
   try {
@@ -10,7 +11,7 @@ async function getReciever(req, res) {
     res.json(reciever);
   } catch (error) {
     res.status(error.status).json({ error: error.message });
-    console.error(error);
+    logger.warn(error);
   }
 }
 
@@ -24,7 +25,7 @@ async function createReciever(req, res) {
     res.status(201).json(reciever);
   } catch (error) {
     res.status(error.status).json({ error: error.message });
-    console.error(error);
+    logger.warn(error);
   }
 }
 
@@ -41,7 +42,7 @@ async function editReciever(req, res) {
     res.json(reciever);
   } catch (error) {
     res.status(error.status).json({ error: error.message });
-    console.error(error);
+    logger.warn(error);
   }
 }
 

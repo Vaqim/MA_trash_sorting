@@ -1,5 +1,6 @@
 const knex = require('knex');
 const { db } = require('../config');
+const logger = require('../logger')(__filename);
 
 const client = knex(db);
 
@@ -10,10 +11,10 @@ async function prepareDatabase() {
 async function testConnection() {
   try {
     await client.raw('SELECT NOW()');
-    console.log('Database connection created!');
+    logger.info('Database connection created!');
     await prepareDatabase();
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     throw new Error('ERROR: Test connection failed!');
   }
 }

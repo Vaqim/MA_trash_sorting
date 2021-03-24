@@ -1,5 +1,6 @@
 const TrashTypeDB = require('../../db/trashType');
 const HTTPError = require('../../utils/httpError');
+const logger = require('../../logger')(__filename);
 
 async function createTrashType(req, res) {
   try {
@@ -10,11 +11,11 @@ async function createTrashType(req, res) {
 
     const trashType = await TrashTypeDB.createTrashType(trashTypeData);
 
-    console.log(trashType);
+    logger.debug(trashType, 'Created trash type');
 
     res.json(trashType);
   } catch (error) {
-    console.error(error);
+    logger.warn(error);
     res.status(error.status || 500).json({ error: error.message });
   }
 }
@@ -27,7 +28,7 @@ async function getTrashType(req, res) {
 
     res.json(trashType);
   } catch (error) {
-    console.error(error);
+    logger.warn(error);
     res.status(error.status || 500).json({ error: error.message });
   }
 }
@@ -43,7 +44,7 @@ async function editTrashType(req, res) {
 
     res.json(trashType);
   } catch (error) {
-    console.error(error);
+    logger.warn(error);
     throw new HTTPError('Trash type wasn`t edited', 409);
   }
 }
