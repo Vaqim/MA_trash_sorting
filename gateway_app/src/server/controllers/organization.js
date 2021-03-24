@@ -1,4 +1,5 @@
 const apiAdapter = require('../../service/apiAdapter');
+const logger = require('../../logger')(__filename);
 
 // Microservice URL, used to send requests
 const BASE_URL = 0;
@@ -10,7 +11,7 @@ async function getAllOrganizations(req, res) {
 
     res.send(organizations);
   } catch (error) {
-    console.log(error.message || error);
+    logger.error(error.message || error);
     throw error;
   }
 }
@@ -21,7 +22,7 @@ async function getOrganization(req, res) {
 
     res.send(organization);
   } catch (error) {
-    console.log(error.message || error);
+    logger.error(error.message || error);
     throw error;
   }
 }
@@ -32,7 +33,7 @@ async function getOrganizationByParams(req, res) {
 
     res.send(organization);
   } catch (error) {
-    console.log(error.message || error);
+    logger.error(error.message || error);
     throw error;
   }
 }
@@ -43,7 +44,7 @@ async function createOrganization(req, res) {
 
     res.send(organization);
   } catch (error) {
-    console.log(error.message || error);
+    logger.error(error.message || error);
     throw error;
   }
 }
@@ -54,7 +55,7 @@ async function updateOrganization(req, res) {
 
     res.send(organization);
   } catch (error) {
-    console.log(error.message || error);
+    logger.error(error.message || error);
     throw error;
   }
 }
@@ -65,7 +66,7 @@ async function getServicesByOrganization(req, res) {
 
     res.send(services);
   } catch (error) {
-    console.log(error.message || error);
+    logger.error(error.message || error);
     throw error;
   }
 }

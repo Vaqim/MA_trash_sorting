@@ -1,5 +1,7 @@
+const logger = require('../../logger')(__filename);
+
 function errorHandler(err, req, res) {
-  console.log(err);
+  logger.log(err.message || err);
   switch (err.name) {
     case 'BadRequestError':
       res.status(400).send(err.message);

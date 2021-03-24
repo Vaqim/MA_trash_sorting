@@ -1,4 +1,5 @@
 const apiAdapter = require('../../service/apiAdapter');
+const logger = require('../../logger')(__filename);
 
 // Microservice URL, used to send requests
 const BASE_URL = 0;
@@ -10,7 +11,7 @@ async function getServices(req, res) {
 
     res.send(services);
   } catch (error) {
-    console.log(error.message || error);
+    logger.info(error.message || error);
     throw error;
   }
 }
@@ -21,7 +22,7 @@ async function getService(req, res) {
 
     res.send(service);
   } catch (error) {
-    console.log(error.message || error);
+    logger.info(error.message || error);
     throw error;
   }
 }
@@ -32,7 +33,7 @@ async function createService(req, res) {
 
     res.send(service);
   } catch (error) {
-    console.log(error.message || error);
+    logger.info(error.message || error);
     throw error;
   }
 }
@@ -43,7 +44,7 @@ async function updateService(req, res) {
 
     res.send(service);
   } catch (error) {
-    console.log(error.message || error);
+    logger.info(error.message || error);
     throw error;
   }
 }
@@ -54,7 +55,7 @@ async function deleteService(req, res) {
 
     res.status(202).send();
   } catch (error) {
-    console.log(error.message || error);
+    logger.info(error.message || error);
     throw error;
   }
 }

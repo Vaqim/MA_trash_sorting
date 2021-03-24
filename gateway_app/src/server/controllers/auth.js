@@ -3,6 +3,7 @@ const { generateError } = require('../../service/error');
 const { refreshSecret } = require('../../config');
 const { generateAccessToken, generateRefreshToken } = require('../../service/auth');
 const { clientsController, organizationController, recieverController } = require('.');
+const logger = require('../../logger')(__filename);
 
 async function registerUser(req, res) {
   try {
@@ -26,7 +27,7 @@ async function registerUser(req, res) {
 
     res.status(201).send(user);
   } catch (error) {
-    console.log(error.message || error);
+    logger.error(error.message || error);
     throw error;
   }
 }
@@ -54,7 +55,7 @@ async function loginUser(req, res) {
 
     res.json({ accessToken, refreshToken });
   } catch (error) {
-    console.log(error.message || error);
+    logger.error(error.message || error);
     throw error;
   }
 }
