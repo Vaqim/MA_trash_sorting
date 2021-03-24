@@ -6,7 +6,7 @@ const config = {
   db: {
     client: 'postgresql',
     connection: {
-      name: process.env.DB_NAME || fatal('No db name'),
+      database: process.env.DB_NAME || fatal('No db name'),
       password: process.env.DB_PASSWORD || fatal('No db password'),
       host: process.env.DB_HOST || fatal('No db host'),
       user: process.env.DB_USER || fatal('No db user'),
