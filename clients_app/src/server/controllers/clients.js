@@ -12,7 +12,7 @@ async function getClient(req, res) {
     res.json(client);
   } catch (error) {
     res.status(error.status).json({ error: error.message });
-    logger.warn(error, error.message);
+    logger.warn(error);
   }
 }
 
@@ -29,7 +29,7 @@ async function createClient(req, res) {
     res.status(201).json(client);
   } catch (error) {
     res.status(error.status).json({ error: error.message });
-    logger.warn(error, error.message);
+    logger.warn(error);
   }
 }
 
@@ -46,7 +46,7 @@ async function editClient(req, res) {
     res.json(user);
   } catch (error) {
     res.status(error.status).json({ error: error.message });
-    logger.warn(error, error.message);
+    logger.warn(error);
   }
 }
 

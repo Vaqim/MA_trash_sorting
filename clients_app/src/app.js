@@ -28,7 +28,7 @@ function enableGracefulExit() {
   const exitHandler = (error) => {
     if (error) logger.error(error, error.message);
 
-    logger.info('Graceful stopping...');
+    logger.debug('Graceful stopping...');
     stop(() => {
       process.exit();
     });

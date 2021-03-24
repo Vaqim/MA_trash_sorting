@@ -2,6 +2,7 @@ require('dotenv').config({ path: './.env' });
 const fatal = require('../utils/fatal');
 
 const config = {
+  nodeEnv: process.env.NODE_ENV || 'development',
   port: 3000,
   host: 'localhost',
   db: {

@@ -22,10 +22,10 @@ async function testConnection() {
 async function createDB(tempClient) {
   try {
     await tempClient.raw(`create database ${db.connection.database}`);
-    logger.info('Database created');
+    logger.debug('Database created');
     await tempClient.destroy();
   } catch (error) {
-    logger.info('Database already existed');
+    logger.debug('Database already existed');
   }
 }
 

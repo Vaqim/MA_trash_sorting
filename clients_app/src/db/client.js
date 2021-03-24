@@ -13,7 +13,7 @@ class ClientDB {
 
       return user[0];
     } catch (error) {
-      logger.warn(error, error.message);
+      logger.warn(error);
       throw error;
     }
   }
@@ -30,7 +30,7 @@ class ClientDB {
 
       return user[0];
     } catch (error) {
-      logger.warn(error, error.message);
+      logger.warn(error);
       throw new HTTPError('User wasn`t created', 409);
     }
   }
@@ -43,7 +43,7 @@ class ClientDB {
 
       return user[0];
     } catch (error) {
-      logger.warn(error, error.message);
+      logger.warn(error);
       throw new HTTPError('User wasn`t updated', 409);
     }
   }
