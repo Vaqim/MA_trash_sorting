@@ -5,7 +5,7 @@ const logger = require('../logger')(__filename);
 
 async function testConnection() {
   try {
-    const { ...tempDBConnection } = db.connection;
+    const { database, ...tempDBConnection } = db.connection;
     const testConnConfig = { client: db.client, connection: tempDBConnection };
 
     const tempClient = knex(testConnConfig);
