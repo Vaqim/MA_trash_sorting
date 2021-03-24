@@ -1,25 +1,51 @@
 const knex = require('knex');
+
 const { db } = require('../config');
 const logger = require('../logger')(__filename);
 
-const client = knex(db);
-
-async function prepareDatabase() {
-  console.log('prepare DB');
-}
-
 async function testConnection() {
   try {
-    await client.raw('SELECT NOW()');
+    const { database, ...tempDBConnection } = db.connection;
+    const testConnConfig = { client: db.client, connection: tempDBConnection };
+
+    const tempClient = knex(testConnConfig);
+
+    await tempClient.raw('SELECT NOW()');
     logger.info('Database connection created!');
-    await prepareDatabase();
+
+    return tempClient;
   } catch (error) {
-    logger.error(error);
-    throw new Error('ERROR: Test connection failed!');
+    throw new Error('Test connection to Database failed!');
+  }
+}
+
+async function createDB(tempClient) {
+  try {
+    await tempClient.raw(`create database ${db.connection.database}`);
+    logger.debug('Database created');
+    await tempClient.destroy();
+  } catch (error) {
+    logger.debug('Database already existed');
+  }
+}
+
+async function prepareDB() {
+  try {
+    const tempClient = await testConnection();
+    await createDB(tempClient);
+
+    const readyClient = knex(db);
+
+    await readyClient.migrate.latest({
+      directory: 'src/db/migrations',
+    });
+  } catch (error) {
+    logger.error(error, error.message);
+    throw error;
   }
 }
 
 module.exports = {
-  client,
-  testConnection,
+  prepareDB,
+  client: knex(db),
 };
