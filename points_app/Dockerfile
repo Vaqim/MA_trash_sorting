@@ -1,6 +1,6 @@
 FROM node:14-alpine
 
-WORKDIR usr/src/organization-service
+WORKDIR usr/src/points-service
 
 RUN apk update && apk upgrade
 
