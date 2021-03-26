@@ -11,8 +11,8 @@ auth.post(
 );
 
 auth.post(
-  '/login',
-  asyncHandler(async (req, res) => authController.loginUser(req, res)),
+  '/authenticate',
+  asyncHandler(async (req, res) => authController.authenticateUser(req, res)),
 );
 
 auth.post(

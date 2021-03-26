@@ -2,28 +2,35 @@ const jwt = require('jsonwebtoken');
 const { generateError } = require('../../service/error');
 const { refreshSecret } = require('../../config');
 const { generateAccessToken, generateRefreshToken } = require('../../service/auth');
-const { clientsController, organizationController, recieverController } = require('.');
+const { multipurposeController } = require('.');
+const { clientApi, organizationApi, recieverApi } = require('./api');
 const logger = require('../../logger')(__filename);
 
 async function registerUser(req, res) {
   try {
     const { userType } = req.body;
 
-    let user;
+    let api;
+    let url;
 
     switch (userType) {
       case 'client':
-        user = await clientsController.createClient(req, res);
+        api = clientApi;
+        url = '/clients';
         break;
       case 'organization':
-        user = await organizationController.createOrganization(req, res);
+        api = organizationApi;
+        url = '/organization';
         break;
       case 'reciever':
-        user = await recieverController.createReciever(req, res);
+        api = recieverApi;
+        url = '/recievers';
         break;
       default:
         throw generateError('User type is not defined!', 'BadRequestError');
     }
+
+    const user = await multipurposeController.post(req, res, api, url);
 
     res.status(201).send(user);
   } catch (error) {
@@ -32,23 +39,31 @@ async function registerUser(req, res) {
   }
 }
 
-async function loginUser(req, res) {
+async function authenticateUser(req, res) {
   try {
     const { userType } = req.body;
-    let user;
+
+    let api;
+    let url;
+
     switch (userType) {
       case 'client':
-        // TODO
+        api = clientApi;
+        url = '/clients/authenticate';
         break;
       case 'organization':
-        user = await organizationController.getOrganizationByParams(req, res);
+        api = organizationApi;
+        url = '/organization/authenticate';
         break;
       case 'reciever':
-        // TODO
+        api = recieverApi;
+        url = '/recievers/authenticate';
         break;
       default:
         throw generateError('User type is not defined!', 'BadRequestError');
     }
+
+    const user = await multipurposeController.post(req, res, api, url);
 
     const accessToken = generateAccessToken(user);
     const refreshToken = generateRefreshToken(user);
@@ -75,4 +90,4 @@ function refreshAccessToken(req, res) {
   });
 }
 
-module.exports = { registerUser, loginUser, refreshAccessToken };
+module.exports = { registerUser, authenticateUser, refreshAccessToken };

@@ -1,21 +1,27 @@
 const { Router } = require('express');
 const asyncHandler = require('express-async-handler');
+const { recieverApi } = require('../controllers/api');
 
-const trashTypeRouter = require('./trashType');
-const { recieverController } = require('../controllers');
+const { nestedtrashType } = require('./trashType');
+const { multipurposeController } = require('../controllers');
 
-const reciever = Router();
+const recievers = Router();
 
-reciever.get(
+recievers.get(
   '/',
-  asyncHandler(async (req, res) => recieverController.getReciever(req, res)),
+  asyncHandler(async (req, res) => multipurposeController.get(req, res, recieverApi)),
 );
 
-reciever.put(
-  '/',
-  asyncHandler(async (req, res) => recieverController.editReciever(req, res)),
+recievers.get(
+  '/:id',
+  asyncHandler(async (req, res) => multipurposeController.get(req, res, recieverApi)),
 );
 
-reciever.use('/trash_type', trashTypeRouter);
+recievers.put(
+  '/:id',
+  asyncHandler(async (req, res) => multipurposeController.put(req, res, recieverApi)),
+);
 
-module.exports = reciever;
+recievers.use('/:reciever_id/trash_type', nestedtrashType);
+
+module.exports = recievers;

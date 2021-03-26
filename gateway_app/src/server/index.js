@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const errorHandler = require('./middlewares/errorHandler');
 const authMiddleware = require('./middlewares/tokenAuth');
-const { auth, clients, organization, points, reciever } = require('./router');
+const { auth, clients, organization, points, recievers, trashType } = require('./router');
 
 const app = express();
 
@@ -16,10 +16,11 @@ app.use('/auth', auth);
 
 app.use(authMiddleware);
 
-app.use('/client', clients);
+app.use('/clients', clients);
 app.use('/organization', organization);
 app.use('/points', points);
-app.use('/reciever', reciever);
+app.use('/recievers', recievers);
+app.use('/trash_types', trashType);
 
 app.use(errorHandler);
 
