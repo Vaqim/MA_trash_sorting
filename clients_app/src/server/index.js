@@ -16,7 +16,7 @@ app.get('/', (req, res) => {
   res.send('Hi there!');
 });
 
-app.use('/client', client);
+app.use('/clients', client);
 
 app.use(errorHandler);
 
