@@ -20,4 +20,9 @@ client.put(
   aHdlr(async (req, res) => clientsController.editClient(req, res)),
 );
 
+client.post(
+  '/authenticate',
+  aHdlr(async (req, res) => clientsController.authenticate(req, res)),
+);
+
 module.exports = client;

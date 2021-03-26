@@ -50,8 +50,25 @@ async function editClient(req, res) {
   }
 }
 
+async function authenticate(req, res) {
+  try {
+    if (!req.body.login || !req.body.password)
+      throw new HTTPError('Login & password required!', 400);
+
+    const { login, password } = req.body;
+
+    const client = await db.authenticate(login, password);
+
+    res.json(client);
+  } catch (error) {
+    res.status(error.status).json({ error: error.message });
+    logger.warn(error);
+  }
+}
+
 module.exports = {
   getClient,
+  authenticate,
   createClient,
   editClient,
 };
