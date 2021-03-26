@@ -4,9 +4,28 @@
   "description": "",
   "main": "./src/app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./src/app.js",
+    "migrate:make": "./node_modules/.bin/knex --knexfile=./src/db/knexfile.js migrate:make",
+    "migrate:latest": "./node_modules/.bin/knex --knexfile=./src/db/knexfile.js migrate:latest",
+    "migrate:up": "./node_modules/.bin/knex --knexfile=./src/db/knexfile.js migrate:up",
+    "migrate:down": "./node_modules/.bin/knex --knexfile=./src/db/knexfile.js migrate:down",
+    "seed:make": "./node_modules/.bin/knex --knexfile=./src/db/knexfile.js seed:make",
+    "seed:run": "./node_modules/.bin/knex --knexfile=./src/db/knexfile.js seed:run"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-async-handler": "^1.1.4",
+    "knex": "^0.95.1",
+    "morgan": "^1.10.0",
+    "pg": "^8.5.1",
+    "pino": "^6.11.2",
+    "pino-pretty": "^4.7.1",
+    "uuid": "^8.3.2"
+  }
 }
