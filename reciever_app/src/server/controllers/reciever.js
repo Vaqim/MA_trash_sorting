@@ -4,11 +4,22 @@ const logger = require('../../logger')(__filename);
 
 async function getReciever(req, res) {
   try {
-    if (!req.body.id) throw new HTTPError('Reciever ID required', 400);
+    if (!req.params.reciever_id) throw new HTTPError('Reciever ID required', 400);
 
-    const reciever = await RecieverDB.getReciever(req.body.id);
+    const reciever = await RecieverDB.getReciever(req.params.reciever_id);
 
     res.json(reciever);
+  } catch (error) {
+    res.status(error.status).json({ error: error.message });
+    logger.warn(error);
+  }
+}
+
+async function getRecievers(req, res) {
+  try {
+    const recievers = await RecieverDB.getRecievers();
+
+    res.json(recievers);
   } catch (error) {
     res.status(error.status).json({ error: error.message });
     logger.warn(error);
@@ -31,13 +42,27 @@ async function createReciever(req, res) {
 
 async function editReciever(req, res) {
   try {
-    if (!req.body.id) throw new HTTPError('Reciever ID required', 400);
-    const { id } = req.body;
-    delete req.body.id;
+    if (!req.params.reciever_id) throw new HTTPError('Reciever ID required', 400);
 
     if (!Object.keys(req.body).length) throw new HTTPError('New reciever data required', 400);
 
-    const reciever = await RecieverDB.editReciever(id, req.body);
+    const reciever = await RecieverDB.editReciever(req.params.reciever_id, req.body);
+
+    res.json(reciever);
+  } catch (error) {
+    res.status(error.status).json({ error: error.message });
+    logger.warn(error);
+  }
+}
+
+async function authenticate(req, res) {
+  try {
+    if (!req.body.login || !req.body.password)
+      throw new HTTPError('Login & password required', 400);
+
+    const { login, password } = req.body;
+
+    const reciever = await RecieverDB.authenticate(login, password);
 
     res.json(reciever);
   } catch (error) {
@@ -50,4 +75,6 @@ module.exports = {
   getReciever,
   createReciever,
   editReciever,
+  getRecievers,
+  authenticate,
 };

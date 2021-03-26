@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 
 const errorHandler = require('./middlewares/errorHandler');
 const reciever = require('./routes/reciever');
+const { trashType } = require('./routes/trashType');
 
 const app = express();
 
@@ -16,7 +17,8 @@ app.get('/', (req, res) => {
   res.send('Hello from reciever app!');
 });
 
-app.use('/reciever', reciever);
+app.use('/recievers', reciever);
+app.use('/trash_types', trashType);
 
 app.use(errorHandler);
 

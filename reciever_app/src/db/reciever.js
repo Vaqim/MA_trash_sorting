@@ -18,6 +18,19 @@ class RecieverDB {
     }
   }
 
+  static async getRecievers() {
+    try {
+      const users = await client('recievers').select(['id', 'login', 'address', 'phone']);
+
+      if (!users.length) throw new HTTPError('Recievers wasn`t found', 404);
+
+      return users;
+    } catch (error) {
+      logger.warn(error);
+      throw error;
+    }
+  }
+
   static async createReciever(userData) {
     try {
       const reciever = await client('recievers')
@@ -41,6 +54,21 @@ class RecieverDB {
     } catch (error) {
       logger.warn(error);
       throw new HTTPError('Recieve wasn`t updated', 409);
+    }
+  }
+
+  static async authenticate(login, password) {
+    try {
+      const user = await client('recievers')
+        .select(['id', 'login', 'address', 'phone'])
+        .where({ login, password });
+
+      if (!user.length) throw new HTTPError('Recievers wasn`t found', 404);
+
+      return user[0];
+    } catch (error) {
+      logger.warn(error);
+      throw error;
     }
   }
 }
