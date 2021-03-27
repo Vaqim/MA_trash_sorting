@@ -1,4 +1,3 @@
-const { testConnection } = require('../db');
 const logger = require('../logger')(__filename);
 
 function initializeGracefulShutdown(server) {
@@ -20,7 +19,6 @@ function initializeGracefulShutdown(server) {
 
 async function prepareServer(server) {
   try {
-    await testConnection();
     initializeGracefulShutdown(server);
   } catch (error) {
     logger.error(`ERROR: ${error.message}`);

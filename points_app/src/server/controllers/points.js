@@ -1,6 +1,6 @@
 const calc = require('../../service/calculation');
-const db = require('../../db/models/points');
 const { generateError } = require('../../service/error');
+const { clientApi, organizationApi } = require('./api');
 const logger = require('../../logger')(__filename);
 
 async function calculatePoints(req, res) {
@@ -23,7 +23,7 @@ async function addPoints(req, res) {
     const { clientId, pointsAmounts } = req.body;
     if (!clientId || !pointsAmounts) throw generateError('Bad request', 'BadRequestError');
 
-    await db.addPoints(req.body);
+    await clientApi.post('/clients/add_points', req.body);
 
     res.status(202).send();
   } catch (error) {
@@ -37,7 +37,13 @@ async function spendPoints(req, res) {
     const { clientId, serviceId } = req.body;
     if (!clientId || !serviceId) throw generateError('Bad request', 'BadRequestError');
 
-    await db.spendPoints(req.body);
+    const service = await organizationApi.get(`/organization/sevices/${serviceId}`);
+
+    const client = await clientApi.get(`/clients/${clientId}`);
+
+    if (client.balance - service.price < 0) throw generateError('Not enough points on balance!');
+
+    await clientApi.post(`/clients/spend_points`, { serviceId, price: service.price });
 
     res.status(202).send();
   } catch (error) {
