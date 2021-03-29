@@ -39,7 +39,7 @@ async function prepareDB() {
       directory: 'src/db/migrations',
     });
   } catch (error) {
-    logger.error(error, error.message);
+    logger.error(error.message || error);
     throw error;
   }
 }
