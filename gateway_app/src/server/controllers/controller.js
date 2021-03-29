@@ -2,7 +2,7 @@ const logger = require('../../logger')(__filename);
 
 async function get(req, res, api, path = null) {
   try {
-    const data = await api.get(path || req.path);
+    const { data } = await api.get(path || req.path);
 
     res.send(data);
   } catch (error) {
@@ -13,9 +13,7 @@ async function get(req, res, api, path = null) {
 
 async function post(req, res, api, path = null) {
   try {
-    const tempPath = path || req.path;
-    logger.debug(tempPath, 'tempPath');
-    const data = await api.post(tempPath, req.body);
+    const { data } = await api.post(path || req.path, req.body);
 
     res.send(data);
   } catch (error) {
@@ -26,7 +24,7 @@ async function post(req, res, api, path = null) {
 
 async function put(req, res, api, path = null) {
   try {
-    const data = await api.put(path || req.path, req.body);
+    const { data } = await api.put(path || req.path, req.body);
 
     res.send(data);
   } catch (error) {

@@ -6,10 +6,22 @@ const config = {
   accessSecret: process.env.ACCESS_TOKEN_SECRET || fatal('No access key'),
   refreshSecret: process.env.REFRESH_TOKEN_SECRET || fatal('No refresh key'),
   urls: {
-    client: process.env.CLIENT_URL || fatal('No client microservice URL'),
-    organization: process.env.ORGANIZATION_URL || fatal('No organizatio microservice URL'),
-    reciever: process.env.RECIEVER_URL || fatal('No reciever microservice URL'),
-    points: process.env.POINTS_URL || fatal('No points microservice URL'),
+    client: {
+      host: process.env.CLIENT_HOST || fatal('No client microservice host'),
+      port: process.env.CLIENT_PORT || fatal('No client microservice port'),
+    },
+    organization: {
+      host: process.env.ORGANIZATION_HOST || fatal('No organization microservice host'),
+      port: process.env.ORGANIZATION_PORT || fatal('No organization microservice port'),
+    },
+    reciever: {
+      host: process.env.RECIEVERS_HOST || fatal('No reciever microservice host'),
+      port: process.env.RECIEVERS_PORT || fatal('No reciever microservice port'),
+    },
+    points: {
+      host: process.env.POINTS_HOST || fatal('No points microservice host'),
+      port: process.env.POINTS_PORT || fatal('No points microservice port'),
+    },
   },
 };
 

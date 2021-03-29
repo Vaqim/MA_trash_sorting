@@ -18,4 +18,55 @@ services:
     restart: always
     ports: 
       - 18080:8080
-    
+  
+  organization_service: 
+    image: organization_service
+    build: 
+      context: ./organizations_app
+      dockerfile: Dockerfile
+    env_file: ./organizations_app/.env
+    depends_on: 
+      - "db"
+    restart: always
+
+  clients_service: 
+    image: clients_service
+    build: 
+      context: ./clients_app
+      dockerfile: Dockerfile
+    env_file: ./clients_app/.env
+    depends_on: 
+      - "db"
+    restart: always
+
+  points_service: 
+    image: points_service
+    build: 
+      context: ./points_app
+      dockerfile: Dockerfile
+    env_file: ./points_app/.env
+    depends_on: 
+      - "db"
+    restart: always
+
+  reciever_service: 
+    image: reciever_service
+    build: 
+      context: ./reciever_app
+      dockerfile: Dockerfile
+    env_file: ./reciever_app/.env
+    depends_on: 
+      - "db"
+    restart: always
+
+  gateway_service: 
+    image: gateway_service
+    build: 
+      context: ./gateway_app
+      dockerfile: Dockerfile
+    env_file: ./gateway_app/.env
+    depends_on: 
+      - "db"
+    ports: 
+      - $PORT:$PORT
+    restart: always

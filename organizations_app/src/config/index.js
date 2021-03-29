@@ -2,7 +2,8 @@ require('dotenv').config({ path: `${process.env.PWD}/.env` });
 const fatal = require('../service/fatal');
 
 const config = {
-  port: process.env.PORT || 3000,
+  port: process.env.PORT || 3002,
+  host: process.env.HOST || 'locahost',
   db: {
     client: 'postgresql',
     connection: {

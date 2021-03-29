@@ -16,7 +16,7 @@ async function registerUser(req, res) {
     switch (userType) {
       case 'client':
         api = clientApi;
-        url = '/clients/authenticate';
+        url = '/clients';
         break;
       case 'organization':
         api = organizationApi;

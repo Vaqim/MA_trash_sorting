@@ -2,10 +2,17 @@ require('dotenv').config({ path: `${process.env.PWD}/.env` });
 const fatal = require('../service/fatal');
 
 const config = {
-  port: process.env.PORT || 3000,
+  port: process.env.PORT || 3004,
+  host: process.env.HOST || 'localhost',
   urls: {
-    organization: process.env.ORGANIZATION_URL || fatal('No organization url!'),
-    clients: process.env.CLIENTS_URL || fatal('No clients url!'),
+    client: {
+      host: process.env.CLIENT_HOST || fatal('No client microservice host'),
+      port: process.env.CLIENT_PORT || fatal('No client microservice port'),
+    },
+    organization: {
+      host: process.env.ORGANIZATION_HOST || fatal('No organization microservice host'),
+      port: process.env.ORGANIZATION_PORT || fatal('No organization microservice port'),
+    },
   },
 };
 
