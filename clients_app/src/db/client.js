@@ -62,6 +62,34 @@ class ClientDB {
       throw error;
     }
   }
+
+  static async increasePoints(id, pointsAmount) {
+    try {
+      await client('clients')
+        .update({
+          balance: client.raw('balance + ??', [pointsAmount]),
+        })
+        .where({ id });
+
+      return true;
+    } catch (error) {
+      logger.warn(error);
+      throw error;
+    }
+  }
+
+  static async decreasePoints(id, price) {
+    try {
+      await client('clients')
+        .update({ balance: client.raw('balance - ??', [price]) })
+        .where({ id });
+
+      return true;
+    } catch (error) {
+      logger.warn(error);
+      throw error;
+    }
+  }
 }
 
 module.exports = ClientDB;

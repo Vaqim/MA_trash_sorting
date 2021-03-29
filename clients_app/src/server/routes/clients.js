@@ -25,4 +25,14 @@ client.post(
   aHdlr(async (req, res) => clientsController.authenticate(req, res)),
 );
 
+client.post(
+  '/add_points',
+  aHdlr(async (req, res) => clientsController.increasePoints(req, res)),
+);
+
+client.post(
+  '/spend_points',
+  aHdlr(async (req, res) => clientsController.decreasePoints(req, res)),
+);
+
 module.exports = client;

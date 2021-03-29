@@ -66,9 +66,33 @@ async function authenticate(req, res) {
   }
 }
 
+async function increasePoints(req, res) {
+  try {
+    const { id, pointsAmount } = req.body;
+
+    if (!id || !pointsAmount) throw new HTTPError('Id and amount of points required!', 400);
+  } catch (error) {
+    res.status(error.status).json({ error: error.message });
+    logger.warn(error);
+  }
+}
+
+async function decreasePoints(req, res) {
+  try {
+    const { id, price } = req.body;
+
+    if (!id || !price) throw new HTTPError('Id and price required!', 400);
+  } catch (error) {
+    res.status(error.status).json({ error: error.message });
+    logger.warn(error);
+  }
+}
+
 module.exports = {
   getClient,
   authenticate,
   createClient,
   editClient,
+  increasePoints,
+  decreasePoints,
 };
