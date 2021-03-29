@@ -13,7 +13,9 @@ async function get(req, res, api, path = null) {
 
 async function post(req, res, api, path = null) {
   try {
-    const data = await api.post(path || req.path, req.body);
+    const tempPath = path || req.path;
+    logger.debug(tempPath, 'tempPath');
+    const data = await api.post(tempPath, req.body);
 
     res.send(data);
   } catch (error) {

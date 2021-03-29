@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const { generateError } = require('../../service/error');
 const { refreshSecret } = require('../../config');
 const { generateAccessToken, generateRefreshToken } = require('../../service/auth');
-const { multipurposeController } = require('.');
+const multipurposeController = require('./controller');
 const { clientApi, organizationApi, recieverApi } = require('./api');
 const logger = require('../../logger')(__filename);
 
@@ -16,7 +16,7 @@ async function registerUser(req, res) {
     switch (userType) {
       case 'client':
         api = clientApi;
-        url = '/clients';
+        url = '/clients/authenticate';
         break;
       case 'organization':
         api = organizationApi;
