@@ -71,6 +71,10 @@ async function increasePoints(req, res) {
     const { id, pointsAmount } = req.body;
 
     if (!id || !pointsAmount) throw new HTTPError('Id and amount of points required!', 400);
+
+    await db.increasePoints(id, pointsAmount);
+
+    res.status(202).send();
   } catch (error) {
     res.status(error.status).json({ error: error.message });
     logger.warn(error);
@@ -82,6 +86,10 @@ async function decreasePoints(req, res) {
     const { id, price } = req.body;
 
     if (!id || !price) throw new HTTPError('Id and price required!', 400);
+
+    await db.decreasePoints(id, price);
+
+    res.status(202).send();
   } catch (error) {
     res.status(error.status).json({ error: error.message });
     logger.warn(error);

@@ -2,7 +2,6 @@ const jwt = require('jsonwebtoken');
 const { generateError } = require('../../service/error');
 const { refreshSecret } = require('../../config');
 const { generateAccessToken, generateRefreshToken } = require('../../service/auth');
-const multipurposeController = require('./controller');
 const { clientApi, organizationApi, recieverApi } = require('./api');
 const logger = require('../../logger')(__filename);
 
@@ -30,7 +29,9 @@ async function registerUser(req, res) {
         throw generateError('User type is not defined!', 'BadRequestError');
     }
 
-    const user = await multipurposeController.post(req, res, api, url);
+    delete req.body.userType;
+
+    const { data: user } = await api.post(url, req.body);
 
     res.status(201).send(user);
   } catch (error) {
@@ -63,12 +64,14 @@ async function authenticateUser(req, res) {
         throw generateError('User type is not defined!', 'BadRequestError');
     }
 
-    const user = await multipurposeController.post(req, res, api, url);
+    delete req.body.userType;
+
+    const { data: user } = await api.post(url, req.body);
 
     const accessToken = generateAccessToken(user);
     const refreshToken = generateRefreshToken(user);
 
-    res.json({ accessToken, refreshToken });
+    res.json({ user, accessToken, refreshToken });
   } catch (error) {
     logger.error(error.message || error);
     throw error;
