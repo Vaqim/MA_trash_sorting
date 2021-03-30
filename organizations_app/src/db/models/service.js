@@ -25,7 +25,11 @@ async function getServiceById(id) {
 
 async function createOrganizationService(data) {
   try {
-    const [res] = await knex('services').insert(data).returning('*');
+    const { price, name, organizationId } = data;
+
+    const [res] = await knex('services')
+      .insert({ price, name, organizataion_id: organizationId })
+      .returning('*');
 
     return res;
   } catch (error) {

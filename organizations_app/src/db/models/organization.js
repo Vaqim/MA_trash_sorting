@@ -3,7 +3,9 @@ const logger = require('../../logger')(__filename);
 
 async function getOrganizations() {
   try {
-    const res = await knex.select('*').from('organizations');
+    const res = await knex
+      .select(['id', 'login', 'name', 'phone', 'address'])
+      .from('organizations');
 
     return res;
   } catch (error) {
@@ -25,7 +27,9 @@ async function createOrganization(data) {
 
 async function getOrganizationById(id) {
   try {
-    const [res] = await knex('organizations').where({ id });
+    const [res] = await knex('organizations')
+      .select(['id', 'login', 'name', 'phone', 'address'])
+      .where({ id });
 
     return res;
   } catch (error) {
@@ -36,7 +40,9 @@ async function getOrganizationById(id) {
 
 async function getOrganizationByParams(data) {
   try {
-    const [res] = await knex('organizations').where(data);
+    const [res] = await knex('organizations')
+      .select(['id', 'login', 'name', 'phone', 'address'])
+      .where(data);
 
     return res;
   } catch (error) {
@@ -47,7 +53,10 @@ async function getOrganizationByParams(data) {
 
 async function updateOrganizationById(id, data) {
   try {
-    const [res] = await knex('organizations').update(data).where({ id }).returning('*');
+    const [res] = await knex('organizations')
+      .update(data)
+      .where({ id })
+      .returning(['id', 'login', 'name', 'phone', 'address']);
 
     return res;
   } catch (error) {

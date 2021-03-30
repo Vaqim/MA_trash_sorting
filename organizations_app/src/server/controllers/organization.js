@@ -14,7 +14,7 @@ async function getAllOrganizations(req, res) {
   }
 }
 
-async function getOrganizationByParams(req, res) {
+async function authenticate(req, res) {
   try {
     const { login, password } = req.body;
     if (!login || !password) throw generateError('Login and password required!', 'BadRequestError');
@@ -91,5 +91,5 @@ module.exports = {
   getOrganization,
   updateOrganization,
   getServicesByOrganization,
-  getOrganizationByParams,
+  authenticate,
 };

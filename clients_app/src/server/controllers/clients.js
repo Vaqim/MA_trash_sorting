@@ -68,11 +68,11 @@ async function authenticate(req, res) {
 
 async function increasePoints(req, res) {
   try {
-    const { id, pointsAmount } = req.body;
+    const { clientId, pointsAmount } = req.body;
 
-    if (!id || !pointsAmount) throw new HTTPError('Id and amount of points required!', 400);
+    if (!clientId || !pointsAmount) throw new HTTPError('Id and amount of points required!', 400);
 
-    await db.increasePoints(id, pointsAmount);
+    await db.increasePoints(clientId, pointsAmount);
 
     res.status(202).send();
   } catch (error) {
@@ -83,11 +83,11 @@ async function increasePoints(req, res) {
 
 async function decreasePoints(req, res) {
   try {
-    const { id, price } = req.body;
+    const { clientId, price } = req.body;
 
-    if (!id || !price) throw new HTTPError('Id and price required!', 400);
+    if (!clientId || !price) throw new HTTPError('Id and price required!', 400);
 
-    await db.decreasePoints(id, price);
+    await db.decreasePoints(clientId, price);
 
     res.status(202).send();
   } catch (error) {

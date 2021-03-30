@@ -81,7 +81,7 @@ class ClientDB {
   static async decreasePoints(id, price) {
     try {
       await client('clients')
-        .update({ balance: client.raw('balance - ??', [price]) })
+        .update({ balance: client.raw('balance - ??', [+price]) })
         .where({ id });
 
       return true;

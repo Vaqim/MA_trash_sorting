@@ -3,8 +3,8 @@ const fatal = require('../utils/fatal');
 
 const config = {
   nodeEnv: process.env.NODE_ENV || 'development',
-  port: 3003,
-  host: 'localhost',
+  port: process.env.PORT || 3003,
+  host: process.env.HOST || 'localhost',
   db: {
     client: 'postgres',
     connection: {

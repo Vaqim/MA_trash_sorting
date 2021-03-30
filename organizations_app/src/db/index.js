@@ -46,5 +46,5 @@ async function prepareDB() {
 
 module.exports = {
   prepareDB,
-  client: knex(db),
+  knex: knex(db),
 };

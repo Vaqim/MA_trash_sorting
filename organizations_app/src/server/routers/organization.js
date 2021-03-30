@@ -12,9 +12,9 @@ organization.get(
   asyncHandler((req, res) => organizationController.getAllOrganizations(req, res)),
 );
 
-organization.get(
-  '/login',
-  asyncHandler((req, res) => organizationController.getOrganizationByParams(req, res)),
+organization.post(
+  '/authenticate',
+  asyncHandler((req, res) => organizationController.authenticate(req, res)),
 );
 
 organization.post(

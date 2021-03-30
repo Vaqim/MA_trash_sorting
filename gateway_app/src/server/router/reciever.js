@@ -22,6 +22,6 @@ recievers.put(
   asyncHandler(async (req, res) => multipurposeController.put(req, res, recieverApi)),
 );
 
-recievers.use('/:reciever_id/trash_type', nestedtrashType);
+recievers.use('/:reciever_id/trash_types', nestedtrashType);
 
 module.exports = recievers;

@@ -6,7 +6,7 @@ exports.up = async (knex) => {
     table.string('name').nullable();
     table.string('password').notNullable();
     table.string('phone', 13).nullable();
-    table.string('adress').nullable();
+    table.string('address').nullable();
     table.timestamps(true, true);
   });
 };

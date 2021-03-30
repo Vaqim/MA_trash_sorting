@@ -30,7 +30,10 @@ class TrashTypeDB {
 
   static async editTrashType(trashTypeData, id) {
     try {
-      const trashType = await client('trash_types').update(trashTypeData, ['*']).where({ id });
+      const trashType = await client('trash_types')
+        .update(trashTypeData, ['*'])
+        .where({ id })
+        .returning('*');
       return trashType[0];
     } catch (error) {
       logger.warn(error);

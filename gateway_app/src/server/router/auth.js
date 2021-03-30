@@ -16,8 +16,8 @@ auth.post(
 );
 
 auth.post(
-  '/resresh_token',
-  asyncHandler(async (req, res) => authController.refreshToken(req, res)),
+  '/refresh_token',
+  asyncHandler(async (req, res) => authController.refreshAccessToken(req, res)),
 );
 
 module.exports = auth;
