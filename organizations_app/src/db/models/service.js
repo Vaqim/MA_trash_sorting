@@ -3,7 +3,7 @@ const logger = require('../../logger')(__filename);
 
 async function getServices() {
   try {
-    const res = await knex.select('*').from('services');
+    const res = await knex.select('*').from('services').whereNull('deleted_at');
 
     return res;
   } catch (error) {
@@ -14,7 +14,7 @@ async function getServices() {
 
 async function getServiceById(id) {
   try {
-    const [res] = await knex('services').where({ id });
+    const [res] = await knex('services').where({ id }).whereNull('deleted_at');
 
     return res;
   } catch (error) {
@@ -64,7 +64,7 @@ async function deleteServiceById(id) {
 
 async function getServicesByOrganizationId(id) {
   try {
-    const res = await knex('services').where({ organization_id: id });
+    const res = await knex('services').where({ organization_id: id }).whereNull('deleted_at');
 
     return res;
   } catch (error) {

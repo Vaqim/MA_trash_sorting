@@ -65,10 +65,24 @@ async function getRecieversTrashType(req, res) {
   }
 }
 
+async function deleteTrashType(req, res) {
+  try {
+    if (!req.params.trash_type_id) throw new HTTPError('Trash type ID required', 400);
+
+    const trashTypes = await TrashTypeDB.deleteTrashType(req.params.trash_type_id);
+
+    res.json(trashTypes);
+  } catch (error) {
+    logger.warn(error);
+    res.status(error.status || 500).json({ error: error.message });
+  }
+}
+
 module.exports = {
   createTrashType,
   getTrashType,
   editTrashType,
   getRecieversTrashType,
   getRecieversTrashTypes,
+  deleteTrashType,
 };

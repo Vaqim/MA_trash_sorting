@@ -17,7 +17,10 @@ class TrashTypeDB {
 
   static async getTrashType(id) {
     try {
-      const trashType = await client('trash_types').select(['*']).where({ id });
+      const trashType = await client('trash_types')
+        .select(['*'])
+        .where({ id })
+        .whereNull('deleted_at');
 
       if (!Object.keys(trashType).length) throw new HTTPError('Trash type wasn`t found', 404);
 
@@ -44,11 +47,25 @@ class TrashTypeDB {
   // eslint-disable-next-line camelcase
   static async getRecieversTrashTypes(reciever_id) {
     try {
-      const trashTypes = await client('trash_types').select(['*']).where({ reciever_id });
+      const trashTypes = await client('trash_types')
+        .select(['*'])
+        .where({ reciever_id })
+        .whereNull('deleted_at');
 
       if (!Object.keys(trashTypes).length) throw new HTTPError('Trash types wasn`t found', 404);
 
       return trashTypes;
+    } catch (error) {
+      logger.warn(error);
+      throw error;
+    }
+  }
+
+  static async deleteTrashType(id) {
+    try {
+      await client('trash_types').update({ deleted_at: new Date() }).where({ id });
+
+      return true;
     } catch (error) {
       logger.warn(error);
       throw error;

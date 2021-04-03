@@ -16,6 +16,11 @@ trashType.get(
   aHdlr(async (req, res) => trashTypeController.getTrashType(req, res)),
 );
 
+trashType.delete(
+  '/:trash_type_id',
+  aHdlr(async (req, res) => trashTypeController.deleteTrashType(req, res)),
+);
+
 nestedTrashTypes.get(
   '/',
   aHdlr(async (req, res) => trashTypeController.getRecieversTrashTypes(req, res)),

@@ -33,7 +33,7 @@ async function registerUser(req, res) {
 
     const { data: user } = await api.post(url, req.body);
 
-    res.status(201).send(user);
+    res.status(201).send({ ...user, userType });
   } catch (error) {
     logger.error(error.message || error);
     throw error;
@@ -66,7 +66,8 @@ async function authenticateUser(req, res) {
 
     delete req.body.userType;
 
-    const { data: user } = await api.post(url, req.body);
+    let { data: user } = await api.post(url, req.body);
+    user = { ...user, userType };
 
     const accessToken = generateAccessToken(user);
     const refreshToken = generateRefreshToken(user);
@@ -88,6 +89,7 @@ function refreshAccessToken(req, res) {
       password: user.password,
       name: user.name,
       phone: user.phone,
+      userType: user.userType,
     });
     res.json({ accessToken: newAccessToken });
   });

@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const asyncHandler = require('express-async-handler');
 const { organizationApi } = require('../controllers/api');
+const forbiddenRoute = require('../middlewares/forbiddenRoute')('organization');
 
 const { multipurposeController } = require('../controllers');
 
@@ -15,6 +16,8 @@ services.get(
   '/:id',
   asyncHandler((req, res) => multipurposeController.get(req, res, organizationApi)),
 );
+
+services.use(forbiddenRoute);
 
 services.post(
   '',

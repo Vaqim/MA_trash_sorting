@@ -15,6 +15,8 @@ exports.up = async (knex) => {
     table.decimal('modifier').notNullable().unsigned();
     table.uuid('reciever_id').references('recievers.id').notNullable();
     table.unique(['name', 'reciever_id'], 'uniq_recievers_trash_types');
+    table.timestamp('deleted_at').nullable().defaultTo(null);
+    table.timestamps(true, true);
   });
 };
 
