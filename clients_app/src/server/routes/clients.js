@@ -10,6 +10,11 @@ client.get(
   aHdlr(async (req, res) => clientsController.getClient(req, res)),
 );
 
+client.get(
+  '/bot/:id',
+  aHdlr(async (req, res) => clientsController.getClientByTelegramId(req, res)),
+);
+
 client.post(
   '/',
   aHdlr(async (req, res) => clientsController.createClient(req, res)),

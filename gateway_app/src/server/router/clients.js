@@ -11,6 +11,11 @@ client.get(
   asyncHandler(async (req, res) => multipurposeController.get(req, res, clientApi)),
 );
 
+client.get(
+  '/bot/:id',
+  asyncHandler(async (req, res) => multipurposeController.get(req, res, clientApi)),
+);
+
 client.put(
   '/:id',
   asyncHandler(async (req, res) => multipurposeController.put(req, res, clientApi)),

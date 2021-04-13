@@ -1,5 +1,5 @@
 const api = require('./api');
-const logger = require('../../logger');
+const logger = require('../../logger')(__filename);
 
 async function get(url) {
   try {

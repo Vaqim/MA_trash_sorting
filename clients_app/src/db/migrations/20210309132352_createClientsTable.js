@@ -7,6 +7,7 @@ exports.up = async (knex) => {
     table.string('password').notNullable();
     table.string('phone', 13).nullable();
     table.decimal('balance').defaultTo('0.0').notNullable().unsigned();
+    table.integer('telegram_id').unique().notNullable();
     table.timestamps(true, true);
   });
 };
