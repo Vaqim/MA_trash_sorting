@@ -4,11 +4,11 @@ const config = require('../config');
 
 const bot = new Telegraf(config.botToken);
 
-// Можно использовать id телеграма для определения юзера
 bot.start(client.createUser);
-bot.command('whoami', client.getUser);
-bot.command('organization', organization.getAllOrganizations);
-bot.command('reciever', reciever.getAllRecievers);
+
+bot.hears('Мой баланс \u{1F4B5}', client.getUser);
+bot.hears('Я хочу что-то купить \u{1F911}', organization.getAllOrganizations);
+bot.hears('Информация про пункты здачи мусора \u{1F914}', reciever.getAllRecievers);
 
 bot.action(/^[get_organization]+( (.)+)?$/, organization.getOrganizationById);
 bot.action(/^[services]+( (.)+)?$/, organization.getServicesByOrgId);

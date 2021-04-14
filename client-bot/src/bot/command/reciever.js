@@ -15,8 +15,8 @@ async function getAllRecievers(ctx) {
 
     ctx.reply(`О ком хотите узнать?`, Markup.inlineKeyboard(buttons));
   } catch (error) {
+    ctx.reply(`Не могу получить пункты приёма с сервера`);
     logger.error(error.message || error);
-    throw error;
   }
 }
 
@@ -31,13 +31,14 @@ async function getRecieverById(ctx) {
       `trash_types ${reciever.id}`,
     );
 
+    ctx.answerCbQuery();
     ctx.reply(
       `${reciever.login}\nАдреса: ${reciever.address}\nТелефон: ${reciever.phone}\n`,
       Markup.inlineKeyboard([button]),
     );
   } catch (error) {
+    ctx.reply(`Не могу получить пункт приёма с сервера`);
     logger.error(error.message || error);
-    throw error;
   }
 }
 
@@ -51,10 +52,11 @@ async function getTrashTypesByRecieverId(ctx) {
       return `${types.name}\nБаллы за килограм: ${types.modifier * 100}`;
     });
 
+    ctx.answerCbQuery();
     ctx.reply(strings.join('\n'));
   } catch (error) {
+    ctx.reply(`Не могу получить виды мусора с сервера`);
     logger.error(error.message || error);
-    throw error;
   }
 }
 

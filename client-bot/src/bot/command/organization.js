@@ -2,7 +2,6 @@ const { Markup } = require('telegraf');
 const api = require('../api');
 const logger = require('../../logger')(__filename);
 
-// Variant 1
 async function getAllOrganizations(ctx) {
   try {
     const organizations = await api.get(`/organization`);
@@ -14,29 +13,15 @@ async function getAllOrganizations(ctx) {
       ];
     });
 
-    ctx.reply('Выберете организацию', Markup.inlineKeyboard(buttons));
+    ctx.reply(
+      'Окей, выбери организацию у которой хочешь что-то купить',
+      Markup.inlineKeyboard(buttons),
+    );
   } catch (error) {
+    ctx.reply(`Не могу получить организации с сервера`);
     logger.error(error.message || error);
-    throw error;
   }
 }
-
-// Variant 2 need to change id
-/* async function getAllOrganizations(ctx) {
-  try {
-    const organizations = await api.get(`/organization`);
-
-    const strings = organizations.map(
-      (org) =>
-        `${org.name}\nАдреса: ${org.address}\nНомер тедевону: ${org.phone}\nОтримати всi сервiси: \n/service_${org.id}`,
-    );
-
-    ctx.reply(strings.join('\n'));
-  } catch (error) {
-    logger.error(error.message || error);
-    throw error;
-  }
-} */
 
 async function getOrganizationById(ctx) {
   try {
@@ -52,8 +37,8 @@ async function getOrganizationById(ctx) {
       Markup.inlineKeyboard([button]),
     );
   } catch (error) {
+    ctx.reply(`Не могу получить организацию с сервера`);
     logger.error(error.message || error);
-    throw error;
   }
 }
 
@@ -72,10 +57,10 @@ async function getServicesByOrgId(ctx) {
     });
 
     ctx.answerCbQuery();
-    ctx.reply('Теперь выбирете сервис, который хотите получить:', Markup.inlineKeyboard(buttons));
+    ctx.reply('Отлично, теперь выбери что хочешь получить:', Markup.inlineKeyboard(buttons));
   } catch (error) {
+    ctx.reply(`Не могу получить сервисы`);
     logger.error(error.message || error);
-    throw error;
   }
 }
 
@@ -90,12 +75,14 @@ async function getServiceById(ctx) {
 
     ctx.answerCbQuery();
     ctx.reply(
-      `${service.name}\nЦена: ${service.price}\nОписание: ${service.description}\n`,
+      `${service.name}\nЦена: ${service.price}\nОписание: ${
+        service.description ? service.description : 'Кажеться здесь ничего не написано \u{1F615}'
+      }\n`,
       Markup.inlineKeyboard([button]),
     );
   } catch (error) {
+    ctx.reply(`Не могу получить сервис с сервера`);
     logger.error(error.message || error);
-    throw error;
   }
 }
 

@@ -7,12 +7,15 @@ async function spendPoints(ctx) {
     const serviceId = data.split(' ')[1];
     const clientId = ctx.from.id;
 
+    const service = await api.get(`/organization/services/${serviceId}`);
+
     await api.post(`/points/spend`, { clientId, serviceId });
 
-    ctx.reply('Покупка совершена!\n');
+    ctx.answerCbQuery();
+    ctx.reply(`Круто!\nТы потратил ${service.price} на ${service.name}\nНаслаждайся! \u{270C}`);
   } catch (error) {
-    logger.error('error.message' || error);
-    throw error;
+    ctx.reply(`Боюсь у тебя не достаточно балов \u{1F614}`);
+    logger.error(error.message || error);
   }
 }
 
