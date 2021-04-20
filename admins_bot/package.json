@@ -8,5 +8,11 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "pino": "^6.11.3",
+    "pino-pretty": "^4.7.1",
+    "telegraf": "^4.3.0"
+  }
 }
