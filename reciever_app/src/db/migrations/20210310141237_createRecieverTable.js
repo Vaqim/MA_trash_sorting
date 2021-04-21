@@ -7,6 +7,7 @@ exports.up = async (knex) => {
     table.string('password').notNullable();
     table.string('address').notNullable().unique();
     table.string('phone', 13).notNullable();
+    table.string('telegram_id').unique().notNullable();
   });
 
   await knex.schema.createTable('trash_types', (table) => {
