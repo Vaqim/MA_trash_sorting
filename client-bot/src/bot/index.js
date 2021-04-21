@@ -1,5 +1,5 @@
 const { Telegraf } = require('telegraf');
-const { client, organization, reciever, points } = require('./command');
+const { client, organization, reciever, points, voucher } = require('./command');
 const config = require('../config');
 
 const bot = new Telegraf(config.botToken);
@@ -16,6 +16,7 @@ bot.action(/^[get_reciever]+( (.)+)?$/, reciever.getRecieverById);
 bot.action(/^[get_service]+( (.)+)?$/, organization.getServiceById);
 bot.action(/^[trash_types]+( (.)+)?$/, reciever.getTrashTypesByRecieverId);
 bot.action(/^[buy]+( (.)+)?$/, points.spendPoints);
+bot.action(/^[activate]+( (.)+)?$/, voucher.activateVoucher);
 
 bot.launch();
 

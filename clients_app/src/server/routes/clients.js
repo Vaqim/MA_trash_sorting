@@ -1,5 +1,6 @@
 const { Router } = require('express');
 const aHdlr = require('express-async-handler');
+const voucher = require('./voucher');
 
 const clientsController = require('../controllers/clients');
 
@@ -39,5 +40,7 @@ client.post(
   '/spend_points',
   aHdlr(async (req, res) => clientsController.decreasePoints(req, res)),
 );
+
+client.use('/voucher', voucher);
 
 module.exports = client;

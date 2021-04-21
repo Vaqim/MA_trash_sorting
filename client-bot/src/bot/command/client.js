@@ -38,8 +38,4 @@ async function getUser(ctx) {
   }
 }
 
-async function changeUser(ctx) {
-  // TODO
-}
-
-module.exports = { createUser, getUser, changeUser };
+module.exports = { createUser, getUser };
