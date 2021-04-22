@@ -13,8 +13,8 @@ exports.up = async (knex) => {
 
   await knex.schema.createTable('vouchers', (table) => {
     table.uuid('id').defaultTo(knex.raw('uuid_generate_v4()')).primary();
-    table.string('client_id').notNullable();
-    table.string('service_id').notNullable();
+    table.integer('client_id').notNullable();
+    table.uuid('service_id').notNullable();
     table.string('status').defaultTo('pending').notNullable();
     table.timestamp('usable_to').notNullable();
     table.timestamps(true, true);

@@ -1,6 +1,9 @@
 const { Markup } = require('telegraf');
+const moment = require('moment');
 const api = require('../api');
 const logger = require('../../logger')(__filename);
+
+moment.locale('ru');
 
 async function spendPoints(ctx) {
   try {
@@ -15,22 +18,17 @@ async function spendPoints(ctx) {
       client_id: clientId,
     });
 
-    console.log(voucher);
-
-    const date = new Date();
-    const usableTo = Date.parse(voucher.usable_to);
-
-    console.log('usableTo ', usableTo);
-
-    if (voucher.status !== 'pending' || date.getTime() > usableTo)
-      throw new Error('Купон использован');
     await api.post(`/points/spend`, { clientId, serviceId });
 
     const button = Markup.button.callback('Использовать!', `activate ${voucher.id}`);
 
     ctx.answerCbQuery();
-    ctx.reply(
-      `Круто!\nТы потратил ${service.price} на ${service.name}\nНаслаждайся!\nЭтот купон действителен до ${voucher.usable_to} \u{270C}`,
+    await ctx.reply(
+      `Круто!\nТы потратил ${service.price} на ${
+        service.name
+      }\nНаслаждайся!\nЭтот купон действителен до\n${moment(voucher.usable_to).format(
+        'lll',
+      )} \u{270C}`,
       Markup.inlineKeyboard([button]),
     );
   } catch (error) {

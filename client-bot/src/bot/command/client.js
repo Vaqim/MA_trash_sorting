@@ -16,7 +16,7 @@ async function createUser(ctx) {
     const user = await api.post(`/auth/registration`, data);
 
     ctx.reply(
-      `Привет! \u{1F44B} Вот твои данные\n Login: ${user.login}\nPassword: ${user.password}`,
+      `Привет! \u{1F44B} Вот твои данные\nLogin: ${user.login}\nPassword: ${user.password}`,
       keyboard,
     );
   } catch (error) {

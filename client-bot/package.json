@@ -12,6 +12,7 @@
   "dependencies": {
     "axios": "^0.21.1",
     "dotenv": "^8.2.0",
+    "moment": "^2.29.1",
     "pino": "^6.11.2",
     "pino-pretty": "^4.7.1",
     "telegraf": "^4.3.0"
