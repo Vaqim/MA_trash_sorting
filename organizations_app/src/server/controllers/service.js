@@ -8,7 +8,7 @@ async function getServices(req, res) {
 
     res.json(services);
   } catch (error) {
-    logger.error(error.message || error);
+    logger.error(error);
     throw error;
   }
 }
@@ -22,7 +22,7 @@ async function getService(req, res) {
 
     res.json(services);
   } catch (error) {
-    logger.error(error.message || error);
+    logger.error(error);
     throw error;
   }
 }
@@ -36,7 +36,7 @@ async function createService(req, res) {
 
     res.json(service);
   } catch (error) {
-    logger.error(error.message || error);
+    logger.error(error);
     throw error;
   }
 }
@@ -51,7 +51,7 @@ async function updateService(req, res) {
 
     res.json(service);
   } catch (error) {
-    logger.error(error.message || error);
+    logger.error(error);
     throw error;
   }
 }
@@ -65,7 +65,7 @@ async function deleteService(req, res) {
 
     res.status(202).send();
   } catch (error) {
-    logger.error(error.message || error);
+    logger.error(error);
     throw error;
   }
 }

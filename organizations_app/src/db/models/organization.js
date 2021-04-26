@@ -9,7 +9,7 @@ async function getOrganizations() {
 
     return res;
   } catch (error) {
-    logger.error(error.message || error);
+    logger.error(error);
     throw error;
   }
 }
@@ -20,7 +20,7 @@ async function createOrganization(data) {
 
     return res;
   } catch (error) {
-    logger.error(error.message || error);
+    logger.error(error);
     throw error;
   }
 }
@@ -33,7 +33,7 @@ async function getOrganizationById(id) {
 
     return res;
   } catch (error) {
-    logger.error(error.message || error);
+    logger.error(error);
     throw error;
   }
 }
@@ -46,7 +46,7 @@ async function getOrganizationByParams(data) {
 
     return res;
   } catch (error) {
-    logger.error(error.message || error);
+    logger.error(error);
     throw error;
   }
 }
@@ -60,7 +60,7 @@ async function updateOrganizationById(id, data) {
 
     return res;
   } catch (error) {
-    logger.error(error.message || error);
+    logger.error(error);
     throw error;
   }
 }

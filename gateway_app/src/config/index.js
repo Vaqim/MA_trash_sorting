@@ -5,6 +5,7 @@ const config = {
   port: process.env.PORT || 3000,
   accessSecret: process.env.ACCESS_TOKEN_SECRET || fatal('No access key'),
   refreshSecret: process.env.REFRESH_TOKEN_SECRET || fatal('No refresh key'),
+  botToken: process.env.BOT_TOKEN || fatal('No bot token'),
   urls: {
     client: {
       host: process.env.CLIENT_HOST || fatal('No client microservice host'),

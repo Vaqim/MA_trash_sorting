@@ -13,7 +13,7 @@ async function calculatePoints(req, res) {
 
     res.json({ points: total });
   } catch (error) {
-    logger.error(error.message || error);
+    logger.error(error);
     throw error;
   }
 }
@@ -27,7 +27,7 @@ async function addPoints(req, res) {
 
     res.status(202).send();
   } catch (error) {
-    logger.error(error.message || error);
+    logger.error(error);
     throw error;
   }
 }
@@ -47,7 +47,7 @@ async function spendPoints(req, res) {
 
     res.status(202).send();
   } catch (error) {
-    logger.error(error.message || error);
+    logger.error(error);
     throw error;
   }
 }
