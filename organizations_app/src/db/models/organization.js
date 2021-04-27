@@ -38,6 +38,19 @@ async function getOrganizationById(id) {
   }
 }
 
+async function getOrgByTgId(telegram_id) {
+  try {
+    const [res] = await knex('organizations')
+      .select(['id', 'login', 'name', 'phone', 'address'])
+      .where({ telegram_id });
+
+    return res;
+  } catch (error) {
+    logger.error(error.message || error);
+    throw error;
+  }
+}
+
 async function getOrganizationByParams(data) {
   try {
     const [res] = await knex('organizations')
@@ -71,4 +84,5 @@ module.exports = {
   createOrganization,
   updateOrganizationById,
   getOrganizationByParams,
+  getOrgByTgId,
 };

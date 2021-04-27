@@ -8,7 +8,7 @@ const organization = Router();
 organization.use('/services', services);
 
 organization.get(
-  '',
+  '/',
   asyncHandler((req, res) => organizationController.getAllOrganizations(req, res)),
 );
 
@@ -25,6 +25,11 @@ organization.post(
 organization.get(
   '/:id',
   asyncHandler((req, res) => organizationController.getOrganization(req, res)),
+);
+
+organization.get(
+  '/bot/:telegram_id',
+  asyncHandler((req, res) => organizationController.getOrgByTgId(req, res)),
 );
 
 organization.put(

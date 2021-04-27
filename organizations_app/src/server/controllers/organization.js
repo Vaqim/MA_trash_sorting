@@ -42,6 +42,20 @@ async function getOrganization(req, res) {
   }
 }
 
+async function getOrgByTgId(req, res) {
+  try {
+    const { telegram_id } = req.params;
+    if (!telegram_id) throw generateError('Telegram id is not defined!', 'BadRequestError');
+
+    const org = await db.getOrgByTgId(telegram_id);
+
+    res.json(org);
+  } catch (error) {
+    logger.error(error.message || error);
+    throw error;
+  }
+}
+
 async function createOrganization(req, res) {
   try {
     const { name, login, password } = req.body;
@@ -92,4 +106,5 @@ module.exports = {
   updateOrganization,
   getServicesByOrganization,
   authenticate,
+  getOrgByTgId,
 };
