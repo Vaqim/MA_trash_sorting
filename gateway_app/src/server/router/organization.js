@@ -21,6 +21,11 @@ organization.get(
 );
 
 organization.get(
+  '/bot/:id',
+  asyncHandler((req, res) => multipurposeController.get(req, res, organizationApi)),
+);
+
+organization.get(
   '/:id/services',
   asyncHandler((req, res) => multipurposeController.get(req, res, organizationApi)),
 );
