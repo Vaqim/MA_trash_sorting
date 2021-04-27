@@ -28,6 +28,11 @@ reciever.get(
   aHdlr(async (req, res) => recieverController.getRecievers(req, res)),
 );
 
+reciever.get(
+  '/bot/:telegram_id',
+  aHdlr(async (req, res) => recieverController.getRecieverByTgId(req, res)),
+);
+
 reciever.post(
   '/authenticate',
   aHdlr(async (req, res) => recieverController.authenticate(req, res)),

@@ -71,10 +71,24 @@ async function authenticate(req, res) {
   }
 }
 
+async function getRecieverByTgId(req, res) {
+  try {
+    if (!req.params.telegram_id) throw new HTTPError('Reciever Telegram ID required', 400);
+
+    const reciever = await RecieverDB.getRecieverByTgId(req.params.telegram_id);
+
+    res.json(reciever);
+  } catch (error) {
+    res.status(error.status).json({ error: error.message });
+    logger.warn(error);
+  }
+}
+
 module.exports = {
   getReciever,
   createReciever,
   editReciever,
   getRecievers,
   authenticate,
+  getRecieverByTgId,
 };

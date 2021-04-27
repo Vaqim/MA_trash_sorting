@@ -71,6 +71,22 @@ class RecieverDB {
       throw error;
     }
   }
+
+  // eslint-disable-next-line camelcase
+  static async getRecieverByTgId(telegram_id) {
+    try {
+      const user = await client('recievers')
+        .select(['id', 'login', 'address', 'phone'])
+        .where({ telegram_id });
+
+      if (!user.length) throw new HTTPError('Reciever wasn`t found', 404);
+
+      return user[0];
+    } catch (error) {
+      logger.warn(error);
+      throw error;
+    }
+  }
 }
 
 module.exports = RecieverDB;
