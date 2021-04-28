@@ -6,7 +6,7 @@ async function get(req, res, api) {
 
     res.status(status).send(data);
   } catch (error) {
-    logger.error(error.message || error);
+    logger.error(error);
     throw error;
   }
 }
@@ -17,7 +17,7 @@ async function post(req, res, api) {
 
     res.status(status).send(data);
   } catch (error) {
-    logger.error(error.message || error);
+    logger.error(error);
     throw error;
   }
 }
@@ -28,7 +28,7 @@ async function put(req, res, api) {
 
     res.status(status).send(data);
   } catch (error) {
-    logger.error(error.message || error);
+    logger.error(error);
     throw error;
   }
 }
@@ -39,7 +39,7 @@ async function del(req, res, api) {
 
     res.status(202).send();
   } catch (error) {
-    logger.error(error.message || error);
+    logger.error(error);
     throw error;
   }
 }

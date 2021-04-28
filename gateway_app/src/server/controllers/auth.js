@@ -35,7 +35,7 @@ async function registerUser(req, res) {
 
     res.status(201).send({ ...user, userType });
   } catch (error) {
-    logger.error(error.message || error);
+    logger.error(error);
     throw error;
   }
 }
@@ -74,7 +74,7 @@ async function authenticateUser(req, res) {
 
     res.json({ user, accessToken, refreshToken });
   } catch (error) {
-    logger.error(error.message || error);
+    logger.error(error);
     throw error;
   }
 }

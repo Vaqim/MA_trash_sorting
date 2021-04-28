@@ -18,14 +18,31 @@ class ClientDB {
     }
   }
 
+  static async getClientByTelegramId(id) {
+    try {
+      const user = await client('clients')
+        .select(['id', 'login', 'name', 'phone', 'balance'])
+        .where({ telegram_id: id });
+
+      if (!user.length) throw new HTTPError('User wasn`t found', 404);
+
+      return user[0];
+    } catch (error) {
+      logger.warn(error);
+      throw error;
+    }
+  }
+
   static async createClient(clientData) {
     try {
       const user = await client('clients').insert(clientData, [
         'id',
         'login',
+        'password',
         'name',
         'phone',
         'balance',
+        'telegram_id',
       ]);
 
       return user[0];
