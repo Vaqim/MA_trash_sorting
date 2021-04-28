@@ -5,7 +5,7 @@ exports.up = async (knex) => {
     table.decimal('price').notNullable();
     table.string('name').notNullable();
     table.string('description').nullable();
-    table.uuid('organization_id').references('organizations.id');
+    table.string('organization_id');
     table.timestamp('deleted_at').nullable().defaultTo(null);
     table.timestamps(true, true);
   });

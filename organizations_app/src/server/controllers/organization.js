@@ -1,3 +1,4 @@
+const generator = require('generate-password');
 const db = require('../../db/models/organization');
 const { generateError } = require('../../service/error');
 const { getServicesByOrganizationId } = require('../../db/models/service');
@@ -58,8 +59,15 @@ async function getOrgByTgId(req, res) {
 
 async function createOrganization(req, res) {
   try {
-    const { name, login, password } = req.body;
-    if (!name || !login || !password) throw generateError('Bad request!', 'BadRequestError');
+    const { name, telegram_id, login } = req.body;
+    if (!name || !telegram_id || !login) throw generateError('Bad request!', 'BadRequestError');
+
+    const password = generator.generate({
+      length: 16,
+      numbers: true,
+    });
+
+    req.body.password = password;
 
     const org = await db.createOrganization(req.body);
 
