@@ -1,7 +1,7 @@
 const { Scenes, Markup } = require('telegraf');
 
 const logger = require('../../logger')(__filename);
-
+const deleteMessage = require('../../utils/deleteMessage');
 const api = require('../api');
 
 const recKeyboard = Markup.keyboard([
@@ -10,6 +10,8 @@ const recKeyboard = Markup.keyboard([
   'Изменить позиции',
   'Удалить позиции',
 ]).resize();
+
+const skipKeyboard = Markup.inlineKeyboard([Markup.button.callback('Продолжить', 'skip')]);
 
 const createTrashTypeScene = new Scenes.WizardScene(
   'CREATE_TRASHTYPE_SCENE_ID',
@@ -48,8 +50,61 @@ const createTrashTypeScene = new Scenes.WizardScene(
   },
 );
 
+const infoTrashTypeScene = new Scenes.WizardScene(
+  'INFO_TRASHTYPE_SCENE_ID',
+  async (ctx) => {
+    const { id } = ctx.from;
+    const { mainMessage } = ctx.wizard.state;
+
+    const data = await api.get(`/recievers/${id}/trash_types`);
+
+    const buttons = data.map((service) => {
+      return [Markup.button.callback(service.name, `info ${service.id}`)];
+    });
+
+    if (!buttons.length) {
+      await ctx.reply('Кажеться у вас пока что нет позиций, сначала создайте их');
+      return ctx.scene.leave();
+    }
+
+    buttons.push([Markup.button.callback('Выйти', `leave`)]);
+    if (mainMessage) {
+      await ctx.editMessageText(
+        'Выберете позицию, которую хотите просмотреть:',
+        Markup.inlineKeyboard(buttons),
+      );
+
+      ctx.answerCbQuery();
+      return ctx.wizard.next();
+    }
+
+    const message = await ctx.reply(
+      'Выберете позицию, которую хотите просмотреть:',
+      Markup.inlineKeyboard(buttons),
+    );
+
+    ctx.wizard.state.mainMessage = message;
+
+    return ctx.wizard.next();
+  },
+  async (ctx) => {
+    const { data } = ctx.update.callback_query;
+    const { mainMessage } = ctx.wizard.state;
+    if (data === 'leave') return deleteMessage(ctx, mainMessage.id);
+    const serviceId = data.split(' ')[1];
+    const service = await api.get(`/trash_types/${serviceId}`);
+
+    await ctx.editMessageText(
+      `Тип: ${service.name}\nКоефициент: ${service.modifier}`,
+      skipKeyboard,
+    );
+
+    return ctx.wizard.selectStep(0);
+  },
+);
+
 // const editTrashTypeScene = new Scenes.WizardScene('EDIT_TRASHTYPE_SCENE_ID', async (ctx) => {
 //   ctx.wizard.state.updateData = {};
 // });
 
-module.exports = [createTrashTypeScene];
+module.exports = [createTrashTypeScene, infoTrashTypeScene];
