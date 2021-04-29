@@ -1,3 +1,15 @@
-const { creationScene, serviceScene, creationServiceScene } = require('./organization');
+const {
+  creationScene,
+  infoServiceScene,
+  deleteServiceScene,
+  creationServiceScene,
+  changeServiceScene,
+} = require('./organization');
 
-module.exports = { creationScene, serviceScene, creationServiceScene };
+module.exports = {
+  creationScene,
+  deleteServiceScene,
+  infoServiceScene,
+  creationServiceScene,
+  changeServiceScene,
+};

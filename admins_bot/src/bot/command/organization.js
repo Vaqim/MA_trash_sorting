@@ -2,14 +2,14 @@ const { Scenes, Markup } = require('telegraf');
 const api = require('../api');
 const logger = require('../../logger')(__filename);
 
-// ДЛЯ ВАДИМА
-// Нужно ещё допилить напильником, но основной функционал работает
-
-const orgKeyboard = Markup.keyboard(['Просмотреть сервисы', 'Создать сервисы']).resize();
+const orgKeyboard = Markup.keyboard([
+  'Просмотреть сервисы',
+  'Создать сервисы',
+  'Удалить сервисы',
+  'Изменить сервисы',
+]).resize();
 const recKeyboard = Markup.keyboard(['']).resize();
 const skipKeyboard = Markup.inlineKeyboard([Markup.button.callback('Продолжить', 'skip')]);
-
-const steps = { info: 6, delete: 7, change: 2 };
 
 const creationScene = new Scenes.WizardScene(
   'CREATION_SCENE_ID',
@@ -32,7 +32,11 @@ const creationScene = new Scenes.WizardScene(
     } else {
       data = await api.get(`/recievers/bot/${from.id}`);
     }
-    if (!data.length) await ctx.scene.leave();
+    if (typeof data === 'object') {
+      const currentKeyboard = type === 'organization' ? orgKeyboard : recKeyboard;
+      await ctx.reply('Такой пользователь уже существует', currentKeyboard);
+      return ctx.scene.leave();
+    }
     ctx.wizard.state.creationData.userType = type;
     await ctx.reply('Теперь введите название');
     return ctx.wizard.next();
@@ -55,7 +59,10 @@ const creationScene = new Scenes.WizardScene(
       const data = await api.post('/auth/registration', ctx.wizard.state.creationData);
       const currentKeyboard =
         ctx.wizard.state.creationData.userType === 'organization' ? orgKeyboard : recKeyboard;
-      await ctx.reply(`Отлично!\nНазвание: ${data.name}\nПароль: ${data.password}`, orgKeyboard);
+      await ctx.reply(
+        `Отлично!\nНазвание: ${data.name}\nПароль: ${data.password}`,
+        currentKeyboard,
+      );
       return ctx.scene.leave();
     } catch (error) {
       ctx.reply('Что-то не получилось');
@@ -64,36 +71,35 @@ const creationScene = new Scenes.WizardScene(
   },
 );
 
-const serviceScene = new Scenes.WizardScene(
-  'SERVICE_SCENE_ID',
+const changeServiceScene = new Scenes.WizardScene(
+  'CHANGE_SERVICE_SCENE_ID',
   async (ctx) => {
     const { id } = ctx.from;
 
     const data = await api.get(`/organization/${id}/services`);
 
     const buttons = data.map((service) => {
-      return [
-        Markup.button.callback(service.name, `info ${service.id}`),
-        Markup.button.callback(`Изменить`, `change ${service.id}`),
-        Markup.button.callback(`Удалить`, `delete ${service.id}`),
-      ];
+      return [Markup.button.callback(service.name, `info ${service.id}`)];
     });
 
-    await ctx.reply('Выберете сервис:', Markup.inlineKeyboard(buttons));
+    if (!buttons.length) {
+      await ctx.reply('Кажеться у вас пока что нет сервисов, сначала создайте их');
+      return ctx.scene.leave();
+    }
+
+    buttons.push([Markup.button.callback('Выйти', `leave`)]);
+
+    await ctx.reply('Выберете сервис, который вы хотите изменить:', Markup.inlineKeyboard(buttons));
 
     return ctx.wizard.next();
   },
   async (ctx) => {
-    const [operation, id] = ctx.update.callback_query.data.split(' ');
-    const requiredStep = steps[operation];
-    ctx.wizard.state.serviceId = id;
+    const { data } = ctx.update.callback_query;
+    if (data === 'leave') return ctx.scene.leave();
+    const serviceId = data.split(' ')[1];
 
-    ctx.reply('Вы точно хотите это сделать?', skipKeyboard);
-
-    return ctx.wizard.selectStep(requiredStep);
-  },
-  async (ctx) => {
     ctx.wizard.state.updateService = {};
+    ctx.wizard.state.serviceId = serviceId;
 
     await ctx.reply(
       `Отлично, тепер я буду спрашивать что поменять, а ты отвечай.\nЕсли не хочешь менять этот пункт просто напиши "-".\nИ так название:`,
@@ -134,9 +140,33 @@ const serviceScene = new Scenes.WizardScene(
 
     return ctx.wizard.selectStep(0);
   },
+);
+const infoServiceScene = new Scenes.WizardScene(
+  'INFO_SERVICE_SCENE_ID',
   async (ctx) => {
-    const { serviceId } = ctx.wizard.state;
-    console.log(serviceId);
+    const { id } = ctx.from;
+
+    const data = await api.get(`/organization/${id}/services`);
+
+    const buttons = data.map((service) => {
+      return [Markup.button.callback(service.name, `delete ${service.id}`)];
+    });
+
+    if (!buttons.length) {
+      await ctx.reply('Кажеться у вас пока что нет сервисов, сначала создайте их');
+      return ctx.scene.leave();
+    }
+
+    buttons.push([Markup.button.callback('Выйти', `leave`)]);
+
+    await ctx.reply('Выберете сервис, который хотите удалить:', Markup.inlineKeyboard(buttons));
+
+    return ctx.wizard.next();
+  },
+  async (ctx) => {
+    const { data } = ctx.update.callback_query;
+    if (data === 'leave') return ctx.scene.leave();
+    const serviceId = data.split(' ')[1];
     const service = await api.get(`/organization/services/${serviceId}`);
 
     await ctx.reply(
@@ -148,8 +178,35 @@ const serviceScene = new Scenes.WizardScene(
 
     return ctx.wizard.selectStep(0);
   },
+);
+
+const deleteServiceScene = new Scenes.WizardScene(
+  'DELETE_SERVICE_SCENE_ID',
   async (ctx) => {
-    const { serviceId } = ctx.wizard.state;
+    const { id } = ctx.from;
+
+    const data = await api.get(`/organization/${id}/services`);
+
+    const buttons = data.map((service) => {
+      return [Markup.button.callback(service.name, `delete ${service.id}`)];
+    });
+
+    if (!buttons.length) {
+      await ctx.reply('Кажеться у вас пока что нет сервисов, сначала создайте их');
+      return ctx.scene.leave();
+    }
+
+    buttons.push([Markup.button.callback('Выйти', `leave`)]);
+
+    await ctx.reply('Выберете сервис, который хотите удалить:', Markup.inlineKeyboard(buttons));
+
+    return ctx.wizard.next();
+  },
+  async (ctx) => {
+    const { data } = ctx.update.callback_query;
+    if (data === 'leave') return ctx.scene.leave();
+    const serviceId = data.split(' ')[1];
+
     await api.del(`/organization/services/${serviceId}`);
 
     await ctx.reply(`Сервис успешно удалён!`, skipKeyboard);
@@ -191,4 +248,10 @@ const creationServiceScene = new Scenes.WizardScene(
   },
 );
 
-module.exports = { creationScene, serviceScene, creationServiceScene };
+module.exports = {
+  creationScene,
+  infoServiceScene,
+  changeServiceScene,
+  creationServiceScene,
+  deleteServiceScene,
+};
