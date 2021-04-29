@@ -1,6 +1,7 @@
 const { Scenes, Markup } = require('telegraf');
 const api = require('../api');
 const logger = require('../../logger')(__filename);
+const deleteMessage = require('../../utils/deleteMessage');
 
 const orgKeyboard = Markup.keyboard([
   'Просмотреть сервисы',
@@ -32,6 +33,7 @@ const creationScene = new Scenes.WizardScene(
     } else {
       data = await api.get(`/recievers/bot/${from.id}`);
     }
+    ctx.answerCbQuery();
     if (typeof data === 'object') {
       const currentKeyboard = type === 'organization' ? orgKeyboard : recKeyboard;
       await ctx.reply('Такой пользователь уже существует', currentKeyboard);
@@ -75,6 +77,7 @@ const changeServiceScene = new Scenes.WizardScene(
   'CHANGE_SERVICE_SCENE_ID',
   async (ctx) => {
     const { id } = ctx.from;
+    const { mainMessage } = ctx.wizard.state;
 
     const data = await api.get(`/organization/${id}/services`);
 
@@ -88,19 +91,25 @@ const changeServiceScene = new Scenes.WizardScene(
     }
 
     buttons.push([Markup.button.callback('Выйти', `leave`)]);
+    if (mainMessage) ctx.answerCbQuery();
 
-    await ctx.reply('Выберете сервис, который вы хотите изменить:', Markup.inlineKeyboard(buttons));
+    const message = await ctx.reply(
+      'Выберете сервис, который вы хотите изменить:',
+      Markup.inlineKeyboard(buttons),
+    );
 
+    ctx.wizard.state.mainMessage = message;
     return ctx.wizard.next();
   },
   async (ctx) => {
     const { data } = ctx.update.callback_query;
-    if (data === 'leave') return ctx.scene.leave();
+    const { mainMessage } = ctx.wizard.state;
+    if (data === 'leave') return deleteMessage(ctx, mainMessage.id);
     const serviceId = data.split(' ')[1];
 
     ctx.wizard.state.updateService = {};
     ctx.wizard.state.serviceId = serviceId;
-
+    ctx.answerCbQuery();
     await ctx.reply(
       `Отлично, тепер я буду спрашивать что поменять, а ты отвечай.\nЕсли не хочешь менять этот пункт просто напиши "-".\nИ так название:`,
     );
@@ -145,11 +154,12 @@ const infoServiceScene = new Scenes.WizardScene(
   'INFO_SERVICE_SCENE_ID',
   async (ctx) => {
     const { id } = ctx.from;
+    const { mainMessage } = ctx.wizard.state;
 
     const data = await api.get(`/organization/${id}/services`);
 
     const buttons = data.map((service) => {
-      return [Markup.button.callback(service.name, `delete ${service.id}`)];
+      return [Markup.button.callback(service.name, `info ${service.id}`)];
     });
 
     if (!buttons.length) {
@@ -158,18 +168,33 @@ const infoServiceScene = new Scenes.WizardScene(
     }
 
     buttons.push([Markup.button.callback('Выйти', `leave`)]);
+    if (mainMessage) {
+      await ctx.editMessageText(
+        'Выберете сервис, который хотите просмотреть:',
+        Markup.inlineKeyboard(buttons),
+      );
 
-    await ctx.reply('Выберете сервис, который хотите удалить:', Markup.inlineKeyboard(buttons));
+      ctx.answerCbQuery();
+      return ctx.wizard.next();
+    }
+
+    const message = await ctx.reply(
+      'Выберете сервис, который хотите просмотреть:',
+      Markup.inlineKeyboard(buttons),
+    );
+
+    ctx.wizard.state.mainMessage = message;
 
     return ctx.wizard.next();
   },
   async (ctx) => {
     const { data } = ctx.update.callback_query;
-    if (data === 'leave') return ctx.scene.leave();
+    const { mainMessage } = ctx.wizard.state;
+    if (data === 'leave') return deleteMessage(ctx, mainMessage.id);
     const serviceId = data.split(' ')[1];
     const service = await api.get(`/organization/services/${serviceId}`);
 
-    await ctx.reply(
+    await ctx.editMessageText(
       `Название: ${service.name}\nЦена: ${service.price}\nОписание: ${
         service.description ? service.description : '-'
       }`,
@@ -184,7 +209,7 @@ const deleteServiceScene = new Scenes.WizardScene(
   'DELETE_SERVICE_SCENE_ID',
   async (ctx) => {
     const { id } = ctx.from;
-
+    const { mainMessage } = ctx.wizard.state;
     const data = await api.get(`/organization/${id}/services`);
 
     const buttons = data.map((service) => {
@@ -198,18 +223,32 @@ const deleteServiceScene = new Scenes.WizardScene(
 
     buttons.push([Markup.button.callback('Выйти', `leave`)]);
 
-    await ctx.reply('Выберете сервис, который хотите удалить:', Markup.inlineKeyboard(buttons));
+    if (mainMessage) {
+      await ctx.editMessageText(
+        'Выберете сервис, который хотите удалить:',
+        Markup.inlineKeyboard(buttons),
+      );
+
+      return ctx.wizard.next();
+    }
+
+    const message = await ctx.reply(
+      'Выберете сервис, который хотите удалить:',
+      Markup.inlineKeyboard(buttons),
+    );
+    ctx.wizard.state.mainMessage = message;
 
     return ctx.wizard.next();
   },
   async (ctx) => {
+    const { mainMessage } = ctx.wizard.state;
     const { data } = ctx.update.callback_query;
-    if (data === 'leave') return ctx.scene.leave();
+    if (data === 'leave') return deleteMessage(ctx, mainMessage.id);
     const serviceId = data.split(' ')[1];
 
     await api.del(`/organization/services/${serviceId}`);
-
-    await ctx.reply(`Сервис успешно удалён!`, skipKeyboard);
+    ctx.answerCbQuery();
+    await ctx.editMessageText(`Сервис успешно удалён!`, skipKeyboard);
 
     return ctx.wizard.selectStep(0);
   },
