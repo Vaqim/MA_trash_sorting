@@ -103,8 +103,75 @@ const infoTrashTypeScene = new Scenes.WizardScene(
   },
 );
 
+const changeTrashTypeScene = new Scenes.WizardScene(
+  'CHANGE_TRASHTYPE_SCENE_ID',
+  async (ctx) => {
+    const { id } = ctx.from;
+    const { mainMessage } = ctx.wizard.state;
+
+    const data = await api.get(`/recievers/${id}/trash_types`);
+
+    const buttons = data.map((service) => {
+      return [Markup.button.callback(service.name, `info ${service.id}`)];
+    });
+
+    if (!buttons.length) {
+      await ctx.reply('Кажеться у вас пока что нет типов мусора, сначала создайте их');
+      return ctx.scene.leave();
+    }
+
+    buttons.push([Markup.button.callback('Выйти', `leave`)]);
+    if (mainMessage) ctx.answerCbQuery();
+
+    const message = await ctx.reply(
+      'Выберете тип мусора, который вы хотите изменить:',
+      Markup.inlineKeyboard(buttons),
+    );
+
+    ctx.wizard.state.mainMessage = message;
+    return ctx.wizard.next();
+  },
+  async (ctx) => {
+    const { data } = ctx.update.callback_query;
+    const { mainMessage } = ctx.wizard.state;
+    if (data === 'leave') return deleteMessage(ctx, mainMessage.id);
+    const serviceId = data.split(' ')[1];
+
+    ctx.wizard.state.updateService = {};
+    ctx.wizard.state.serviceId = serviceId;
+    ctx.answerCbQuery();
+    await ctx.reply(
+      `Отлично, тепер я буду спрашивать что поменять, а ты отвечай.\nЕсли не хочешь менять этот пункт просто напиши "-".\nИ так название:`,
+    );
+
+    return ctx.wizard.next();
+  },
+  async (ctx) => {
+    const { text } = ctx.message;
+    if (text !== '-') ctx.wizard.state.updateService.name = text;
+
+    await ctx.reply(`Коефициент:`);
+
+    return ctx.wizard.next();
+  },
+  async (ctx) => {
+    const { text } = ctx.message;
+    const { serviceId } = ctx.wizard.state;
+    if (text !== '-') ctx.wizard.state.updateService.modifier = +text;
+
+    const service = await api.put(`trash_types/${serviceId}`, ctx.wizard.state.updateService);
+
+    await ctx.reply(
+      `Тип изменён!\nНазвание: ${service.name}\nКоефициент: ${service.modifier}`,
+      skipKeyboard,
+    );
+
+    return ctx.wizard.selectStep(0);
+  },
+);
+
 // const editTrashTypeScene = new Scenes.WizardScene('EDIT_TRASHTYPE_SCENE_ID', async (ctx) => {
 //   ctx.wizard.state.updateData = {};
 // });
 
-module.exports = [createTrashTypeScene, infoTrashTypeScene];
+module.exports = [createTrashTypeScene, infoTrashTypeScene, changeTrashTypeScene];
