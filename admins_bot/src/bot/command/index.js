@@ -1,15 +1,4 @@
-const {
-  creationScene,
-  infoServiceScene,
-  deleteServiceScene,
-  creationServiceScene,
-  changeServiceScene,
-} = require('./organization');
+const orgScenes = require('./organization');
+const recScenes = require('./reciever');
 
-module.exports = {
-  creationScene,
-  deleteServiceScene,
-  infoServiceScene,
-  creationServiceScene,
-  changeServiceScene,
-};
+module.exports = { orgScenes, recScenes };

@@ -8,7 +8,12 @@ const orgKeyboard = Markup.keyboard([
   'Удалить сервисы',
   'Изменить сервисы',
 ]).resize();
-const recKeyboard = Markup.keyboard(['']).resize();
+const recKeyboard = Markup.keyboard([
+  'Просмотреть позиции',
+  'Создать позиции',
+  'Изменить позиции',
+  'Удалить позиции',
+]).resize();
 const skipKeyboard = Markup.inlineKeyboard([Markup.button.callback('Продолжить', 'skip')]);
 
 const creationScene = new Scenes.WizardScene(
@@ -248,10 +253,10 @@ const creationServiceScene = new Scenes.WizardScene(
   },
 );
 
-module.exports = {
+module.exports = [
   creationScene,
   infoServiceScene,
   changeServiceScene,
   creationServiceScene,
   deleteServiceScene,
-};
+];
