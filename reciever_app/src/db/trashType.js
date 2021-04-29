@@ -4,9 +4,9 @@ const logger = require('../logger')(__filename);
 
 class TrashTypeDB {
   // eslint-disable-next-line camelcase
-  static async createTrashType(trashTypeData, telegram_id) {
+  static async createTrashType(trashTypeData, reciever_id) {
     try {
-      const trashType = await client('trash_types').insert({ ...trashTypeData, telegram_id }, '*');
+      const trashType = await client('trash_types').insert({ ...trashTypeData, reciever_id }, '*');
 
       return trashType[0];
     } catch (error) {
