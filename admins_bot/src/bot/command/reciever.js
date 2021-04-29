@@ -170,8 +170,62 @@ const changeTrashTypeScene = new Scenes.WizardScene(
   },
 );
 
+const deleteTrashTypeScene = new Scenes.WizardScene(
+  'DELETE_TRASHTYPE_SCENE_ID',
+  async (ctx) => {
+    const { id } = ctx.from;
+    const { mainMessage } = ctx.wizard.state;
+    const data = await api.get(`recievers/${id}/trash_types`);
+
+    const buttons = data.map((service) => {
+      return [Markup.button.callback(service.name, `delete ${service.id}`)];
+    });
+
+    if (!buttons.length) {
+      await ctx.reply('Кажеться у вас пока что нет типоу, сначала создайте их');
+      return ctx.scene.leave();
+    }
+
+    buttons.push([Markup.button.callback('Выйти', `leave`)]);
+
+    if (mainMessage) {
+      await ctx.editMessageText(
+        'Выберите тип, который хотите удалить:',
+        Markup.inlineKeyboard(buttons),
+      );
+
+      return ctx.wizard.next();
+    }
+
+    const message = await ctx.reply(
+      'Выберете тип, который хотите удалить:',
+      Markup.inlineKeyboard(buttons),
+    );
+    ctx.wizard.state.mainMessage = message;
+
+    return ctx.wizard.next();
+  },
+  async (ctx) => {
+    const { mainMessage } = ctx.wizard.state;
+    const { data } = ctx.update.callback_query;
+    if (data === 'leave') return deleteMessage(ctx, mainMessage.id);
+    const serviceId = data.split(' ')[1];
+
+    await api.del(`/trash_types/${serviceId}`);
+    ctx.answerCbQuery();
+    await ctx.editMessageText(`Сервис успешно удалён!`, skipKeyboard);
+
+    return ctx.wizard.selectStep(0);
+  },
+);
+
 // const editTrashTypeScene = new Scenes.WizardScene('EDIT_TRASHTYPE_SCENE_ID', async (ctx) => {
 //   ctx.wizard.state.updateData = {};
 // });
 
-module.exports = [createTrashTypeScene, infoTrashTypeScene, changeTrashTypeScene];
+module.exports = [
+  createTrashTypeScene,
+  infoTrashTypeScene,
+  changeTrashTypeScene,
+  deleteTrashTypeScene,
+];

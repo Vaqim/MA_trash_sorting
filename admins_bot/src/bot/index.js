@@ -17,7 +17,7 @@ bot.hears('Изменить сервисы', (ctx) => ctx.scene.enter('CHANGE_SE
 
 bot.hears('Просмотреть позиции', (ctx) => ctx.scene.enter('INFO_TRASHTYPE_SCENE_ID'));
 bot.hears('Создать позиции', (ctx) => ctx.scene.enter('CREATE_TRASHTYPE_SCENE_ID'));
-// bot.hears('Удалить позиции', (ctx) => ctx.scene.enter('DELETE_SERVICE_SCENE_ID'));
+bot.hears('Удалить позиции', (ctx) => ctx.scene.enter('DELETE_TRASHTYPE_SCENE_ID'));
 bot.hears('Изменить позиции', (ctx) => ctx.scene.enter('CHANGE_TRASHTYPE_SCENE_ID'));
 
 bot.launch();
