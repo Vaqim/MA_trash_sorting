@@ -3,6 +3,7 @@ exports.up = async (knex) => {
 
   await knex.schema.createTable('recievers', (table) => {
     table.uuid('id').defaultTo(knex.raw('uuid_generate_v4()')).primary();
+    table.string('name').unique().notNullable();
     table.string('login').unique().notNullable();
     table.string('password').notNullable();
     table.string('address').notNullable().unique();
@@ -14,7 +15,7 @@ exports.up = async (knex) => {
     table.uuid('id').defaultTo(knex.raw('uuid_generate_v4()')).primary();
     table.string('name').notNullable();
     table.decimal('modifier').notNullable().unsigned();
-    table.uuid('reciever_id').references('recievers.id').notNullable();
+    table.string('reciever_id').notNullable();
     table.unique(['name', 'reciever_id'], 'uniq_recievers_trash_types');
     table.timestamp('deleted_at').nullable().defaultTo(null);
     table.timestamps(true, true);

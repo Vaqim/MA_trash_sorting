@@ -1,3 +1,4 @@
+const generator = require('generate-password');
 const RecieverDB = require('../../db/reciever');
 const HTTPError = require('../../utils/httpError');
 const logger = require('../../logger')(__filename);
@@ -28,8 +29,13 @@ async function getRecievers(req, res) {
 
 async function createReciever(req, res) {
   try {
-    if (!req.body.login || !req.body.password || !req.body.address || !req.body.phone)
-      throw new HTTPError('Login, password, address & phone required', 400);
+    if (!req.body.login || !req.body.telegram_id || !req.body.address || !req.body.phone)
+      throw new HTTPError('Login, address & phone required', 400);
+
+    req.body.password = generator.generate({
+      length: 16,
+      numbers: true,
+    });
 
     const reciever = await RecieverDB.createReciever(req.body);
 

@@ -68,5 +68,5 @@ services:
     depends_on: 
       - "db"
     ports: 
-      - $PORT:$PORT
+      - 3000:3000
     restart: always
