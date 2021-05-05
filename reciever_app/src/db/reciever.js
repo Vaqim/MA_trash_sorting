@@ -86,8 +86,6 @@ class RecieverDB {
         .select(['telegram_id', 'login', 'name', 'address', 'phone'])
         .where({ telegram_id });
 
-      // if (!user.length) throw new HTTPError('Reciever wasn`t found', 404);
-
       return user[0];
     } catch (error) {
       logger.warn(error);

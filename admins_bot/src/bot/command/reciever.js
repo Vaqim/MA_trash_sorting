@@ -1,17 +1,9 @@
 const { Scenes, Markup } = require('telegraf');
+const { recKeyboard, skipKeyboard } = require('./keyboards');
 
 const logger = require('../../logger')(__filename);
 const deleteMessage = require('../../utils/deleteMessage');
 const api = require('../api');
-
-const recKeyboard = Markup.keyboard([
-  'Просмотреть позиции',
-  'Создать позиции',
-  'Изменить позиции',
-  'Удалить позиции',
-]).resize();
-
-const skipKeyboard = Markup.inlineKeyboard([Markup.button.callback('Продолжить', 'skip')]);
 
 const createTrashTypeScene = new Scenes.WizardScene(
   'CREATE_TRASHTYPE_SCENE_ID',
@@ -63,7 +55,7 @@ const infoTrashTypeScene = new Scenes.WizardScene(
     });
 
     if (!buttons.length) {
-      await ctx.reply('Кажеться у вас пока что нет позиций, сначала создайте их');
+      await ctx.reply('Кажеться у вас пока что нет позиций, сначала создайте их', recKeyboard);
       return ctx.scene.leave();
     }
 
@@ -90,7 +82,7 @@ const infoTrashTypeScene = new Scenes.WizardScene(
   async (ctx) => {
     const { data } = ctx.update.callback_query;
     const { mainMessage } = ctx.wizard.state;
-    if (data === 'leave') return deleteMessage(ctx, mainMessage.id);
+    if (data === 'leave') return deleteMessage(ctx, mainMessage.id, recKeyboard);
     const serviceId = data.split(' ')[1];
     const service = await api.get(`/trash_types/${serviceId}`);
 
@@ -111,8 +103,8 @@ const changeTrashTypeScene = new Scenes.WizardScene(
 
     const data = await api.get(`/recievers/${id}/trash_types`);
 
-    const buttons = data.map((service) => {
-      return [Markup.button.callback(service.name, `info ${service.id}`)];
+    const buttons = data.map((type) => {
+      return [Markup.button.callback(type.name, `info ${type.id}`)];
     });
 
     if (!buttons.length) {
@@ -121,7 +113,15 @@ const changeTrashTypeScene = new Scenes.WizardScene(
     }
 
     buttons.push([Markup.button.callback('Выйти', `leave`)]);
-    if (mainMessage) ctx.answerCbQuery();
+    if (mainMessage) {
+      ctx.editMessageText(
+        'Выберете тип, который вы хотите изменить:',
+        Markup.inlineKeyboard(buttons),
+      );
+
+      ctx.answerCbQuery();
+      return ctx.wizard.next();
+    }
 
     const message = await ctx.reply(
       'Выберете тип мусора, который вы хотите изменить:',
@@ -134,37 +134,59 @@ const changeTrashTypeScene = new Scenes.WizardScene(
   async (ctx) => {
     const { data } = ctx.update.callback_query;
     const { mainMessage } = ctx.wizard.state;
-    if (data === 'leave') return deleteMessage(ctx, mainMessage.id);
-    const serviceId = data.split(' ')[1];
+    if (data === 'leave') return deleteMessage(ctx, mainMessage.id, recKeyboard);
+    const trashTypeId = data.split(' ')[1];
 
-    ctx.wizard.state.updateService = {};
-    ctx.wizard.state.serviceId = serviceId;
+    ctx.wizard.state.updateTrashType = {};
+    ctx.wizard.state.trashTypeId = trashTypeId;
     ctx.answerCbQuery();
-    await ctx.reply(
+    const message = await ctx.reply(
       `Отлично, тепер я буду спрашивать что поменять, а ты отвечай.\nЕсли не хочешь менять этот пункт просто напиши "-".\nИ так название:`,
-    );
-
-    return ctx.wizard.next();
-  },
-  async (ctx) => {
-    const { text } = ctx.message;
-    if (text !== '-') ctx.wizard.state.updateService.name = text;
-
-    await ctx.reply(`Коефициент:`);
-
-    return ctx.wizard.next();
-  },
-  async (ctx) => {
-    const { text } = ctx.message;
-    const { serviceId } = ctx.wizard.state;
-    if (text !== '-') ctx.wizard.state.updateService.modifier = +text;
-
-    const service = await api.put(`trash_types/${serviceId}`, ctx.wizard.state.updateService);
-
-    await ctx.reply(
-      `Тип изменён!\nНазвание: ${service.name}\nКоефициент: ${service.modifier}`,
       skipKeyboard,
     );
+
+    ctx.wizard.state.mainMessage = message;
+
+    return ctx.wizard.next();
+  },
+  async (ctx) => {
+    const { mainMessage } = ctx.wizard.state;
+    const { message_id: messageId } = mainMessage;
+    const { id: chatId } = mainMessage.chat;
+
+    if (ctx.message) ctx.wizard.state.updateTrashType.name = ctx.message.text;
+    ctx.telegram.editMessageReplyMarkup(chatId, messageId);
+
+    const message = await ctx.reply(`Коефициент:`, skipKeyboard);
+
+    ctx.wizard.state.mainMessage = message;
+
+    return ctx.wizard.next();
+  },
+  async (ctx) => {
+    const { mainMessage } = ctx.wizard.state;
+    const { message_id: messageId } = mainMessage;
+    const { id: chatId } = mainMessage.chat;
+
+    if (ctx.message) ctx.wizard.state.updateTrashType.modifier = ctx.message.text;
+    ctx.telegram.editMessageReplyMarkup(chatId, messageId);
+
+    const { trashTypeId } = ctx.wizard.state;
+    const { updateTrashType } = ctx.wizard.state;
+
+    if (Object.keys(updateTrashType).length !== 0) {
+      const trashType = await api.put(
+        `trash_types/${trashTypeId}`,
+        ctx.wizard.state.updateTrashType,
+      );
+
+      ctx.wizard.state.mainMessage = await ctx.reply(
+        `Тип изменён!\nНазвание: ${trashType.name}\nКоефициент: ${trashType.modifier}`,
+        skipKeyboard,
+      );
+    } else {
+      ctx.wizard.state.mainMessage = await ctx.reply(`Изменения не были внесены`, skipKeyboard);
+    }
 
     return ctx.wizard.selectStep(0);
   },
@@ -208,7 +230,7 @@ const deleteTrashTypeScene = new Scenes.WizardScene(
   async (ctx) => {
     const { mainMessage } = ctx.wizard.state;
     const { data } = ctx.update.callback_query;
-    if (data === 'leave') return deleteMessage(ctx, mainMessage.id);
+    if (data === 'leave') return deleteMessage(ctx, mainMessage.id, recKeyboard);
     const serviceId = data.split(' ')[1];
 
     await api.del(`/trash_types/${serviceId}`);

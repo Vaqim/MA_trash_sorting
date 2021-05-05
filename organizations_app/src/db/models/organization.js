@@ -68,7 +68,7 @@ async function updateOrganizationById(id, data) {
   try {
     const [res] = await knex('organizations')
       .update(data)
-      .where({ id })
+      .where({ telegram_id: id })
       .returning(['id', 'login', 'name', 'phone', 'address']);
 
     return res;
