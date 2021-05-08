@@ -1,10 +1,10 @@
 const { Telegraf, Scenes, session } = require('telegraf');
-const { orgScenes, recScenes } = require('./command');
+const { orgScenes, recScenes, creationScene } = require('./command');
 const { botToken } = require('../config');
 
 const bot = new Telegraf(botToken);
 
-const stage = new Scenes.Stage([...orgScenes, ...recScenes]);
+const stage = new Scenes.Stage([...orgScenes, ...recScenes, creationScene]);
 
 bot.use(session());
 bot.use(stage.middleware());

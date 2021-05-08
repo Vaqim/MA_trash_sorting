@@ -36,7 +36,7 @@ const createTrashTypeScene = new Scenes.WizardScene(
       return ctx.scene.leave();
     } catch (error) {
       logger.error(error);
-      await ctx.reply('Валли, у нас проблемы!');
+      await ctx.reply('Не удалось создать тип мусора, попробуйте позже');
       return ctx.scene.leave();
     }
   },
@@ -45,91 +45,109 @@ const createTrashTypeScene = new Scenes.WizardScene(
 const infoTrashTypeScene = new Scenes.WizardScene(
   'INFO_TRASHTYPE_SCENE_ID',
   async (ctx) => {
-    const { id } = ctx.from;
-    const { mainMessage } = ctx.wizard.state;
+    try {
+      const { id } = ctx.from;
+      const { mainMessage } = ctx.wizard.state;
 
-    const data = await api.get(`/recievers/${id}/trash_types`);
+      const data = await api.get(`/recievers/${id}/trash_types`);
 
-    const buttons = data.map((service) => {
-      return [Markup.button.callback(service.name, `info ${service.id}`)];
-    });
+      const buttons = data.map((service) => {
+        return [Markup.button.callback(service.name, `info ${service.id}`)];
+      });
 
-    if (!buttons.length) {
-      await ctx.reply('Кажеться у вас пока что нет позиций, сначала создайте их', recKeyboard);
-      return ctx.scene.leave();
-    }
+      if (!buttons.length) {
+        await ctx.reply('Кажеться у вас пока что нет позиций, сначала создайте их', recKeyboard);
+        return ctx.scene.leave();
+      }
 
-    buttons.push([Markup.button.callback('Выйти', `leave`)]);
-    if (mainMessage) {
-      await ctx.editMessageText(
+      buttons.push([Markup.button.callback('Выйти', `leave`)]);
+      if (mainMessage) {
+        await ctx.editMessageText(
+          'Выберете позицию, которую хотите просмотреть:',
+          Markup.inlineKeyboard(buttons),
+        );
+
+        ctx.answerCbQuery();
+        return ctx.wizard.next();
+      }
+
+      const message = await ctx.reply(
         'Выберете позицию, которую хотите просмотреть:',
         Markup.inlineKeyboard(buttons),
       );
 
-      ctx.answerCbQuery();
+      ctx.wizard.state.mainMessage = message;
+
       return ctx.wizard.next();
+    } catch (error) {
+      logger.error(error);
+      await ctx.reply('Не удалось получить типы мусора, попробуйте позже');
+      return ctx.scene.leave();
     }
-
-    const message = await ctx.reply(
-      'Выберете позицию, которую хотите просмотреть:',
-      Markup.inlineKeyboard(buttons),
-    );
-
-    ctx.wizard.state.mainMessage = message;
-
-    return ctx.wizard.next();
   },
   async (ctx) => {
-    const { data } = ctx.update.callback_query;
-    const { mainMessage } = ctx.wizard.state;
-    if (data === 'leave') return deleteMessage(ctx, mainMessage.id, recKeyboard);
-    const serviceId = data.split(' ')[1];
-    const service = await api.get(`/trash_types/${serviceId}`);
+    try {
+      const { data } = ctx.update.callback_query;
+      const { mainMessage } = ctx.wizard.state;
+      if (data === 'leave') return deleteMessage(ctx, mainMessage.id, recKeyboard);
+      const serviceId = data.split(' ')[1];
+      const service = await api.get(`/trash_types/${serviceId}`);
 
-    await ctx.editMessageText(
-      `Тип: ${service.name}\nКоефициент: ${service.modifier}`,
-      skipKeyboard,
-    );
+      await ctx.editMessageText(
+        `Тип: ${service.name}\nКоефициент: ${service.modifier}`,
+        skipKeyboard,
+      );
 
-    return ctx.wizard.selectStep(0);
+      return ctx.wizard.selectStep(0);
+    } catch (error) {
+      logger.error(error);
+      await ctx.reply('Не удалось создать тип мусора, попробуйте позже');
+      return ctx.scene.leave();
+    }
   },
 );
 
 const changeTrashTypeScene = new Scenes.WizardScene(
   'CHANGE_TRASHTYPE_SCENE_ID',
   async (ctx) => {
-    const { id } = ctx.from;
-    const { mainMessage } = ctx.wizard.state;
+    try {
+      const { id } = ctx.from;
+      const { mainMessage } = ctx.wizard.state;
 
-    const data = await api.get(`/recievers/${id}/trash_types`);
+      const data = await api.get(`/recievers/${id}/trash_types`);
 
-    const buttons = data.map((type) => {
-      return [Markup.button.callback(type.name, `info ${type.id}`)];
-    });
+      const buttons = data.map((type) => {
+        return [Markup.button.callback(type.name, `info ${type.id}`)];
+      });
 
-    if (!buttons.length) {
-      await ctx.reply('Кажеться у вас пока что нет типов мусора, сначала создайте их');
-      return ctx.scene.leave();
-    }
+      if (!buttons.length) {
+        await ctx.reply('Кажеться у вас пока что нет типов мусора, сначала создайте их');
+        return ctx.scene.leave();
+      }
 
-    buttons.push([Markup.button.callback('Выйти', `leave`)]);
-    if (mainMessage) {
-      ctx.editMessageText(
-        'Выберете тип, который вы хотите изменить:',
+      buttons.push([Markup.button.callback('Выйти', `leave`)]);
+      if (mainMessage) {
+        ctx.editMessageText(
+          'Выберете тип, который вы хотите изменить:',
+          Markup.inlineKeyboard(buttons),
+        );
+
+        ctx.answerCbQuery();
+        return ctx.wizard.next();
+      }
+
+      const message = await ctx.reply(
+        'Выберете тип мусора, который вы хотите изменить:',
         Markup.inlineKeyboard(buttons),
       );
 
-      ctx.answerCbQuery();
+      ctx.wizard.state.mainMessage = message;
       return ctx.wizard.next();
+    } catch (error) {
+      logger.error(error);
+      await ctx.reply('Не удалось получить типы мусора, попробуйте позже');
+      return ctx.scene.leave();
     }
-
-    const message = await ctx.reply(
-      'Выберете тип мусора, который вы хотите изменить:',
-      Markup.inlineKeyboard(buttons),
-    );
-
-    ctx.wizard.state.mainMessage = message;
-    return ctx.wizard.next();
   },
   async (ctx) => {
     const { data } = ctx.update.callback_query;
@@ -164,86 +182,100 @@ const changeTrashTypeScene = new Scenes.WizardScene(
     return ctx.wizard.next();
   },
   async (ctx) => {
-    const { mainMessage } = ctx.wizard.state;
-    const { message_id: messageId } = mainMessage;
-    const { id: chatId } = mainMessage.chat;
+    try {
+      const { mainMessage } = ctx.wizard.state;
+      const { message_id: messageId } = mainMessage;
+      const { id: chatId } = mainMessage.chat;
 
-    if (ctx.message) ctx.wizard.state.updateTrashType.modifier = ctx.message.text;
-    ctx.telegram.editMessageReplyMarkup(chatId, messageId);
+      if (ctx.message) ctx.wizard.state.updateTrashType.modifier = ctx.message.text;
+      ctx.telegram.editMessageReplyMarkup(chatId, messageId);
 
-    const { trashTypeId } = ctx.wizard.state;
-    const { updateTrashType } = ctx.wizard.state;
+      const { trashTypeId } = ctx.wizard.state;
+      const { updateTrashType } = ctx.wizard.state;
 
-    if (Object.keys(updateTrashType).length !== 0) {
-      const trashType = await api.put(
-        `trash_types/${trashTypeId}`,
-        ctx.wizard.state.updateTrashType,
-      );
+      if (Object.keys(updateTrashType).length !== 0) {
+        const trashType = await api.put(
+          `trash_types/${trashTypeId}`,
+          ctx.wizard.state.updateTrashType,
+        );
 
-      ctx.wizard.state.mainMessage = await ctx.reply(
-        `Тип изменён!\nНазвание: ${trashType.name}\nКоефициент: ${trashType.modifier}`,
-        skipKeyboard,
-      );
-    } else {
-      ctx.wizard.state.mainMessage = await ctx.reply(`Изменения не были внесены`, skipKeyboard);
+        ctx.wizard.state.mainMessage = await ctx.reply(
+          `Тип изменён!\nНазвание: ${trashType.name}\nКоефициент: ${trashType.modifier}`,
+          skipKeyboard,
+        );
+      } else {
+        ctx.wizard.state.mainMessage = await ctx.reply(`Изменения не были внесены`, skipKeyboard);
+      }
+
+      return ctx.wizard.selectStep(0);
+    } catch (error) {
+      logger.error(error);
+      await ctx.reply('Не удалось изменить тип мусора, попробуйте позже');
+      return ctx.scene.leave();
     }
-
-    return ctx.wizard.selectStep(0);
   },
 );
 
 const deleteTrashTypeScene = new Scenes.WizardScene(
   'DELETE_TRASHTYPE_SCENE_ID',
   async (ctx) => {
-    const { id } = ctx.from;
-    const { mainMessage } = ctx.wizard.state;
-    const data = await api.get(`recievers/${id}/trash_types`);
+    try {
+      const { id } = ctx.from;
+      const { mainMessage } = ctx.wizard.state;
+      const data = await api.get(`recievers/${id}/trash_types`);
 
-    const buttons = data.map((service) => {
-      return [Markup.button.callback(service.name, `delete ${service.id}`)];
-    });
+      const buttons = data.map((service) => {
+        return [Markup.button.callback(service.name, `delete ${service.id}`)];
+      });
 
-    if (!buttons.length) {
-      await ctx.reply('Кажеться у вас пока что нет типоу, сначала создайте их');
-      return ctx.scene.leave();
-    }
+      if (!buttons.length) {
+        await ctx.reply('Кажеться у вас пока что нет типоу, сначала создайте их');
+        return ctx.scene.leave();
+      }
 
-    buttons.push([Markup.button.callback('Выйти', `leave`)]);
+      buttons.push([Markup.button.callback('Выйти', `leave`)]);
 
-    if (mainMessage) {
-      await ctx.editMessageText(
-        'Выберите тип, который хотите удалить:',
+      if (mainMessage) {
+        await ctx.editMessageText(
+          'Выберите тип, который хотите удалить:',
+          Markup.inlineKeyboard(buttons),
+        );
+
+        return ctx.wizard.next();
+      }
+
+      const message = await ctx.reply(
+        'Выберете тип, который хотите удалить:',
         Markup.inlineKeyboard(buttons),
       );
+      ctx.wizard.state.mainMessage = message;
 
       return ctx.wizard.next();
+    } catch (error) {
+      logger.error(error);
+      await ctx.reply('Не удалось получить типы мусора, попробуйте позже');
+      return ctx.scene.leave();
     }
-
-    const message = await ctx.reply(
-      'Выберете тип, который хотите удалить:',
-      Markup.inlineKeyboard(buttons),
-    );
-    ctx.wizard.state.mainMessage = message;
-
-    return ctx.wizard.next();
   },
   async (ctx) => {
-    const { mainMessage } = ctx.wizard.state;
-    const { data } = ctx.update.callback_query;
-    if (data === 'leave') return deleteMessage(ctx, mainMessage.id, recKeyboard);
-    const serviceId = data.split(' ')[1];
+    try {
+      const { mainMessage } = ctx.wizard.state;
+      const { data } = ctx.update.callback_query;
+      if (data === 'leave') return deleteMessage(ctx, mainMessage.id, recKeyboard);
+      const serviceId = data.split(' ')[1];
 
-    await api.del(`/trash_types/${serviceId}`);
-    ctx.answerCbQuery();
-    await ctx.editMessageText(`Сервис успешно удалён!`, skipKeyboard);
+      await api.del(`/trash_types/${serviceId}`);
+      ctx.answerCbQuery();
+      await ctx.editMessageText(`Сервис успешно удалён!`, skipKeyboard);
 
-    return ctx.wizard.selectStep(0);
+      return ctx.wizard.selectStep(0);
+    } catch (error) {
+      logger.error(error);
+      await ctx.reply('Не удалось удалить тип мусора, попробуйте позже');
+      return ctx.scene.leave();
+    }
   },
 );
-
-// const editTrashTypeScene = new Scenes.WizardScene('EDIT_TRASHTYPE_SCENE_ID', async (ctx) => {
-//   ctx.wizard.state.updateData = {};
-// });
 
 module.exports = [
   createTrashTypeScene,
