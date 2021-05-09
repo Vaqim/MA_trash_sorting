@@ -168,7 +168,11 @@ const changeTrashTypeScene = new Scenes.WizardScene(
       ctx.wizard.state.mainMessage = message;
 
       return ctx.wizard.next();
-    } catch (error) {}
+    } catch (error) {
+      logger.error(error);
+      await ctx.reply('Произошла ошибка', recKeyboard);
+      return ctx.scene.leave();
+    }
   },
   async (ctx) => {
     try {
@@ -184,7 +188,11 @@ const changeTrashTypeScene = new Scenes.WizardScene(
       ctx.wizard.state.mainMessage = message;
 
       return ctx.wizard.next();
-    } catch (error) {}
+    } catch (error) {
+      logger.error(error);
+      await ctx.reply('Произошла ошибка', recKeyboard);
+      return ctx.scene.leave();
+    }
   },
   async (ctx) => {
     try {
