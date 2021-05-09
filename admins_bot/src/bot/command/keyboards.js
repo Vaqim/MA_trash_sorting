@@ -15,6 +15,7 @@ const recKeyboard = Markup.keyboard([
   'Создать позиции',
   'Изменить позиции',
   'Удалить позиции',
+  'Начислить баллы',
 ])
   .resize()
   .oneTime();
