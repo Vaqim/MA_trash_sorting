@@ -63,13 +63,13 @@ class ClientDB {
     }
   }
 
-  static async increasePoints(id, pointsAmount) {
+  static async increasePoints(login, pointsAmount) {
     try {
       await client('clients')
         .update({
           balance: client.raw('balance + ??', [pointsAmount]),
         })
-        .where({ id });
+        .where({ login });
 
       return true;
     } catch (error) {

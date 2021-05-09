@@ -7,44 +7,62 @@ const { orgKeyboard, skipKeyboard } = require('./keyboards');
 const changeOrganizationScene = new Scenes.WizardScene(
   'CHANGE_ORGANIZATION_SCENE_ID',
   async (ctx) => {
-    const message = await ctx.reply(
-      `Введите название, если хотите пропустить нажмите на кнопку:`,
-      skipKeyboard,
-    );
+    try {
+      const message = await ctx.reply(
+        `Введите название, если хотите пропустить нажмите на кнопку:`,
+        skipKeyboard,
+      );
 
-    ctx.wizard.state.updateOrganization = {};
+      ctx.wizard.state.updateOrganization = {};
 
-    ctx.wizard.state.mainMessage = message;
+      ctx.wizard.state.mainMessage = message;
 
-    return ctx.wizard.next();
+      return ctx.wizard.next();
+    } catch (error) {
+      logger.warn(error);
+      await ctx.reply('Прозошла ошибка', orgKeyboard);
+      return ctx.scene.leave();
+    }
   },
   async (ctx) => {
-    const { mainMessage } = ctx.wizard.state;
-    const { message_id: messageId } = mainMessage;
-    const { id: chatId } = mainMessage.chat;
+    try {
+      const { mainMessage } = ctx.wizard.state;
+      const { message_id: messageId } = mainMessage;
+      const { id: chatId } = mainMessage.chat;
 
-    if (ctx.message) ctx.wizard.state.updateOrganization.name = ctx.message.text;
-    ctx.telegram.editMessageReplyMarkup(chatId, messageId);
+      if (ctx.message) ctx.wizard.state.updateOrganization.name = ctx.message.text;
+      ctx.telegram.editMessageReplyMarkup(chatId, messageId);
 
-    const message = await ctx.reply(`Телефон:`, skipKeyboard);
+      const message = await ctx.reply(`Телефон:`, skipKeyboard);
 
-    ctx.wizard.state.mainMessage = message;
+      ctx.wizard.state.mainMessage = message;
 
-    return ctx.wizard.next();
+      return ctx.wizard.next();
+    } catch (error) {
+      logger.warn(error);
+      await ctx.reply('Прозошла ошибка', orgKeyboard);
+      return ctx.scene.leave();
+    }
   },
   async (ctx) => {
-    const { mainMessage } = ctx.wizard.state;
-    const { message_id: messageId } = mainMessage;
-    const { id: chatId } = mainMessage.chat;
+    try {
+      const { mainMessage } = ctx.wizard.state;
+      const { message_id: messageId } = mainMessage;
+      const { id: chatId } = mainMessage.chat;
 
-    if (ctx.message) ctx.wizard.state.updateOrganization.phone = ctx.message.text;
-    ctx.telegram.editMessageReplyMarkup(chatId, messageId);
+      if (ctx.message) ctx.wizard.state.updateOrganization.phone = ctx.message.text;
+      ctx.telegram.editMessageReplyMarkup(chatId, messageId);
 
-    const message = await ctx.reply(`Адрес:`, skipKeyboard);
+      const message = await ctx.reply(`Адрес:`, skipKeyboard);
 
-    ctx.wizard.state.mainMessage = message;
+      ctx.wizard.state.mainMessage = message;
 
-    return ctx.wizard.next();
+      return ctx.wizard.next();
+    } catch (error) {
+      logger.warn(error);
+      await ctx.reply('Прозошла ошибка', orgKeyboard);
+      return ctx.scene.leave();
+    }
   },
   async (ctx) => {
     try {
@@ -125,50 +143,68 @@ const changeServiceScene = new Scenes.WizardScene(
     }
   },
   async (ctx) => {
-    const { data } = ctx.update.callback_query;
-    const { mainMessage } = ctx.wizard.state;
-    if (data === 'leave') return deleteMessage(ctx, mainMessage.id, orgKeyboard);
-    const serviceId = data.split(' ')[1];
+    try {
+      const { data } = ctx.update.callback_query;
+      const { mainMessage } = ctx.wizard.state;
+      if (data === 'leave') return deleteMessage(ctx, mainMessage.id, orgKeyboard);
+      const serviceId = data.split(' ')[1];
 
-    ctx.wizard.state.updateService = {};
-    ctx.wizard.state.serviceId = serviceId;
-    ctx.answerCbQuery();
-    const message = await ctx.editMessageText(
-      `Отлично, тепер я буду спрашивать что поменять, а ты отвечай.\nЕсли не хочешь менять этот пункт просто нажми на кнопку.\nИ так название:`,
-      skipKeyboard,
-    );
+      ctx.wizard.state.updateService = {};
+      ctx.wizard.state.serviceId = serviceId;
+      ctx.answerCbQuery();
+      const message = await ctx.editMessageText(
+        `Отлично, тепер я буду спрашивать что поменять, а ты отвечай.\nЕсли не хочешь менять этот пункт просто нажми на кнопку.\nИ так название:`,
+        skipKeyboard,
+      );
 
-    ctx.wizard.state.mainMessage = message;
+      ctx.wizard.state.mainMessage = message;
 
-    return ctx.wizard.next();
+      return ctx.wizard.next();
+    } catch (error) {
+      logger.warn(error);
+      await ctx.reply('Прозошла ошибка', orgKeyboard);
+      return ctx.scene.leave();
+    }
   },
   async (ctx) => {
-    const { mainMessage } = ctx.wizard.state;
-    const { message_id: messageId } = mainMessage;
-    const { id: chatId } = mainMessage.chat;
+    try {
+      const { mainMessage } = ctx.wizard.state;
+      const { message_id: messageId } = mainMessage;
+      const { id: chatId } = mainMessage.chat;
 
-    if (ctx.message) ctx.wizard.state.updateService.name = ctx.message.text;
-    ctx.telegram.editMessageReplyMarkup(chatId, messageId);
+      if (ctx.message) ctx.wizard.state.updateService.name = ctx.message.text;
+      ctx.telegram.editMessageReplyMarkup(chatId, messageId);
 
-    const message = await ctx.reply(`Цена:`, skipKeyboard);
+      const message = await ctx.reply(`Цена:`, skipKeyboard);
 
-    ctx.wizard.state.mainMessage = message;
+      ctx.wizard.state.mainMessage = message;
 
-    return ctx.wizard.next();
+      return ctx.wizard.next();
+    } catch (error) {
+      logger.warn(error);
+      await ctx.reply('Прозошла ошибка', orgKeyboard);
+      return ctx.scene.leave();
+    }
   },
   async (ctx) => {
-    const { mainMessage } = ctx.wizard.state;
-    const { message_id: messageId } = mainMessage;
-    const { id: chatId } = mainMessage.chat;
+    try {
+      const { mainMessage } = ctx.wizard.state;
+      const { message_id: messageId } = mainMessage;
+      const { id: chatId } = mainMessage.chat;
 
-    if (ctx.message) ctx.wizard.state.updateService.price = ctx.message.text;
-    ctx.telegram.editMessageReplyMarkup(chatId, messageId);
+      if (ctx.message) ctx.wizard.state.updateService.price = ctx.message.text;
+      ctx.telegram.editMessageReplyMarkup(chatId, messageId);
 
-    const message = await ctx.reply(`Описание:`, skipKeyboard);
+      const message = await ctx.reply(`Описание:`, skipKeyboard);
 
-    ctx.wizard.state.mainMessage = message;
+      ctx.wizard.state.mainMessage = message;
 
-    return ctx.wizard.next();
+      return ctx.wizard.next();
+    } catch (error) {
+      logger.warn(error);
+      await ctx.reply('Прозошла ошибка', orgKeyboard);
+      return ctx.scene.leave();
+    }
   },
   async (ctx) => {
     try {

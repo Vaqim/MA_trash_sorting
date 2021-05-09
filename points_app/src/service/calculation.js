@@ -1,6 +1,6 @@
 function calculatePoints(trashItems) {
   return trashItems
-    .map((trashItem) => trashItem.modifier * trashItem.weigth * 100)
+    .map((trashItem) => trashItem.modifier * trashItem.weight * 100)
     .reduce((acc, reducer) => acc + reducer);
 }
 
