@@ -65,12 +65,13 @@ class ClientDB {
 
   static async increasePoints(login, pointsAmount) {
     try {
-      await client('clients')
+      const user = await client('clients')
         .update({
           balance: client.raw('balance + ??', [pointsAmount]),
         })
-        .where({ login });
-
+        .where({ login })
+        .returning('*');
+      if (!user.length) throw new HTTPError('User wasn`t found', 404);
       return true;
     } catch (error) {
       logger.warn(error);

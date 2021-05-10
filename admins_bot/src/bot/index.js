@@ -1,5 +1,5 @@
 const { Telegraf, Scenes, session } = require('telegraf');
-const { orgScenes, recScenes, creationScene } = require('./command');
+const { orgScenes, recScenes, creationScene } = require('./scenes');
 const { botToken } = require('../config');
 
 const bot = new Telegraf(botToken);
