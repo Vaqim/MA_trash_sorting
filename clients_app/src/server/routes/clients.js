@@ -1,5 +1,6 @@
 const { Router } = require('express');
 const aHdlr = require('express-async-handler');
+const voucher = require('./voucher');
 
 const clientsController = require('../controllers/clients');
 
@@ -8,6 +9,11 @@ const client = Router();
 client.get(
   '/:id',
   aHdlr(async (req, res) => clientsController.getClient(req, res)),
+);
+
+client.get(
+  '/bot/:id',
+  aHdlr(async (req, res) => clientsController.getClientByTelegramId(req, res)),
 );
 
 client.post(
@@ -34,5 +40,7 @@ client.post(
   '/spend_points',
   aHdlr(async (req, res) => clientsController.decreasePoints(req, res)),
 );
+
+client.use('/voucher', voucher);
 
 module.exports = client;

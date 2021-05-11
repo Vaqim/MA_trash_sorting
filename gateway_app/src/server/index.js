@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
+const cors = require('cors');
 const errorHandler = require('./middlewares/errorHandler');
 const authMiddleware = require('./middlewares/tokenAuth');
 const { auth, clients, organization, points, recievers, trashType } = require('./router');
@@ -12,6 +13,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(morgan('dev'));
 
+app.use(cors());
 app.use('/auth', auth);
 
 app.use(authMiddleware);

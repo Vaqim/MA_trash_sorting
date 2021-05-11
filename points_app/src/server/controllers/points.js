@@ -13,7 +13,7 @@ async function calculatePoints(req, res) {
 
     res.json({ points: total });
   } catch (error) {
-    logger.error(error.message || error);
+    logger.error(error);
     throw error;
   }
 }
@@ -27,7 +27,7 @@ async function addPoints(req, res) {
 
     res.status(202).send();
   } catch (error) {
-    logger.error(error.message || error);
+    logger.error(error);
     throw error;
   }
 }
@@ -39,15 +39,15 @@ async function spendPoints(req, res) {
 
     const { data: service } = await organizationApi.get(`/organization/services/${serviceId}`);
 
-    const { data: client } = await clientApi.get(`/clients/${clientId}`);
+    const { data: client } = await clientApi.get(`/clients/bot/${clientId}`);
 
     if (client.balance - service.price < 0) throw generateError('Not enough points on balance!');
 
-    await clientApi.post(`/clients/spend_points`, { clientId, price: service.price });
+    await clientApi.post(`/clients/spend_points`, { clientId: client.id, price: service.price });
 
     res.status(202).send();
   } catch (error) {
-    logger.error(error.message || error);
+    logger.error(error);
     throw error;
   }
 }

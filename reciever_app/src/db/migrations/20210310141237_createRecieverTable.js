@@ -4,11 +4,11 @@ exports.up = async (knex) => {
   await knex.schema.createTable('recievers', (table) => {
     table.uuid('id').defaultTo(knex.raw('uuid_generate_v4()')).primary();
     table.string('name').unique().notNullable();
+    table.integer('telegram_id').unique().notNullable();
     table.string('login').unique().notNullable();
     table.string('password').notNullable();
     table.string('address').notNullable().unique();
     table.string('phone', 13).notNullable();
-    table.string('telegram_id').unique().notNullable();
   });
 
   await knex.schema.createTable('trash_types', (table) => {

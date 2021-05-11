@@ -4,6 +4,8 @@ const { generateError } = require('../../service/error');
 
 function authentificateToken(req, res, next) {
   if (req.get('request-type') === 'Bot') return next();
+  if (req.headers.authorization)
+    throw generateError('Authorization required!', 'AuthorizationError');
   const token = req.headers.authorization.split(' ')[1];
   if (!token) throw generateError('Authorization required!', 'AuthorizationError');
 

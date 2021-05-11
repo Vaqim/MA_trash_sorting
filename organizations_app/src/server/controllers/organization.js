@@ -10,7 +10,7 @@ async function getAllOrganizations(req, res) {
 
     res.json(org);
   } catch (error) {
-    logger.error(error.message || error);
+    logger.error(error);
     throw error;
   }
 }
@@ -24,7 +24,7 @@ async function authenticate(req, res) {
 
     res.json(org);
   } catch (error) {
-    logger.error(error.message || error);
+    logger.error(error);
     throw error;
   }
 }
@@ -38,7 +38,7 @@ async function getOrganization(req, res) {
 
     res.json(org);
   } catch (error) {
-    logger.error(error.message || error);
+    logger.error(error);
     throw error;
   }
 }
@@ -73,7 +73,7 @@ async function createOrganization(req, res) {
 
     res.json(org);
   } catch (error) {
-    logger.error(error.message || error);
+    logger.error(error);
     throw error;
   }
 }
@@ -88,7 +88,7 @@ async function updateOrganization(req, res) {
 
     res.json(org);
   } catch (error) {
-    logger.error(error.message || error);
+    logger.error(error);
     throw error;
   }
 }
@@ -102,7 +102,7 @@ async function getServicesByOrganization(req, res) {
 
     res.json(services);
   } catch (error) {
-    logger.error(error.message || error);
+    logger.error(error);
     throw error;
   }
 }
