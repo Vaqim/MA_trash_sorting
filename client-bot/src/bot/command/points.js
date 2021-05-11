@@ -1,4 +1,3 @@
-const { Markup } = require('telegraf');
 const moment = require('moment');
 const qrcode = require('qrcode');
 const { url } = require('../../config');
@@ -22,8 +21,6 @@ async function spendPoints(ctx) {
 
     await api.post(`/points/spend`, { clientId, serviceId });
 
-    const button = Markup.button.callback('Использовать!', `activate ${voucher.id}`);
-
     ctx.answerCbQuery();
     const message = await ctx.reply(
       `Круто!\nТы потратил ${service.price} на ${
@@ -31,14 +28,13 @@ async function spendPoints(ctx) {
       }\nНаслаждайся!\nЭтот купон действителен до\n${moment(voucher.usable_to).format(
         'lll',
       )} \u{270C}`,
-      Markup.inlineKeyboard([button]),
     );
 
     const qr = await qrcode.toDataURL(
       `${url}/clients/voucher/${voucher.id}/activate?chat_id=${message.chat.id}&message_id=${message.message_id}`,
     );
 
-    const [type, qrBuffer] = qr.split(',');
+    const [, qrBuffer] = qr.split(',');
 
     await ctx.replyWithPhoto({ source: Buffer.from(qrBuffer, 'base64') });
   } catch (error) {

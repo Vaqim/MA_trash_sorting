@@ -18,16 +18,26 @@ voucher.post(
   asyncHandler(async (req, res) => multipurposeController.post(req, res, clientApi)),
 );
 
-voucher.put(
+voucher.get(
   '/:id/activate',
   asyncHandler(async (req, res) => {
-    const { chat_id, message_id } = req.query;
-    await axios.get(
-      `https://api.telegram.org/bot${botToken}/editMessageText?chat_id=${chat_id}&message_id=${message_id}&text=${encodeURI(
-        'Купон использован!',
-      )}`,
-    );
-    await multipurposeController.put(req, res, clientApi);
+    try {
+      const { chat_id, message_id } = req.query;
+      await multipurposeController.get(req, res, clientApi);
+      await axios.get(
+        `https://api.telegram.org/bot${botToken}/editMessageText?chat_id=${chat_id}&message_id=${message_id}&text=${encodeURI(
+          'Купон использован!',
+        )}`,
+      );
+    } catch (error) {
+      const { chat_id } = req.query;
+      await axios.get(
+        `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chat_id}&text=${encodeURI(
+          'Купон уже был активирован или уже не действителен!',
+        )}`,
+      );
+      res.status(406).send();
+    }
   }),
 );
 

@@ -45,9 +45,12 @@ class VoucherTable {
 
   static async activateVoucher(id) {
     try {
-      await client('vouchers').update({ status: 'activated' }).where({ id });
+      const voucher = await client('vouchers')
+        .update({ status: 'activated' })
+        .where({ id, status: 'pending' })
+        .returning('*');
 
-      return true;
+      return voucher;
     } catch (error) {
       logger.warn(error);
       throw error;

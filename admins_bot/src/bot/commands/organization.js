@@ -44,6 +44,27 @@ async function changeOrganizationPhone(ctx) {
   }
 }
 
+async function changeOrganizationAddress(ctx) {
+  try {
+    const { mainMessage } = ctx.wizard.state;
+    const { message_id: messageId } = mainMessage;
+    const { id: chatId } = mainMessage.chat;
+
+    if (ctx.message) ctx.wizard.state.updateOrganization.phone = ctx.message.text;
+    ctx.telegram.editMessageReplyMarkup(chatId, messageId);
+
+    const message = await ctx.reply(`Адрес:`, skipKeyboard);
+
+    ctx.wizard.state.mainMessage = message;
+
+    return ctx.wizard.next();
+  } catch (error) {
+    logger.warn(error);
+    await ctx.reply('Прозошла ошибка', orgKeyboard);
+    return ctx.scene.leave();
+  }
+}
+
 async function changeOrganizationEnd(ctx) {
   try {
     const { mainMessage } = ctx.wizard.state;
@@ -60,8 +81,6 @@ async function changeOrganizationEnd(ctx) {
         `/organization/${mainMessage.chat.id}`,
         ctx.wizard.state.updateOrganization,
       );
-
-      console.log(organization);
 
       ctx.wizard.state.mainMessage = await ctx.reply(
         `Организация изменёна!\nНазвание: ${organization.name}\nТелефон: ${organization.phone}\nАдрес: ${organization.address}`,
@@ -411,6 +430,7 @@ async function createServiceEnd(ctx) {
 const changeOrganization = [
   changeOrganizationStart,
   changeOrganizationPhone,
+  changeOrganizationAddress,
   changeOrganizationEnd,
 ];
 const changeService = [

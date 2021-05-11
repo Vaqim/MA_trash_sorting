@@ -6,7 +6,7 @@ class RecieverDB {
   static async getReciever(id) {
     try {
       const user = await client('recievers')
-        .select(['telegram_id', 'login', 'name', 'address', 'phone'])
+        .select(['id', 'telegram_id', 'login', 'name', 'address', 'phone'])
         .where({ id });
 
       if (!user.length) throw new HTTPError('Reciever wasn`t found', 404);
@@ -21,6 +21,7 @@ class RecieverDB {
   static async getRecievers() {
     try {
       const users = await client('recievers').select([
+        'id',
         'telegram_id',
         'login',
         'name',
@@ -83,7 +84,7 @@ class RecieverDB {
   static async getRecieverByTgId(telegram_id) {
     try {
       const user = await client('recievers')
-        .select(['telegram_id', 'login', 'name', 'address', 'phone'])
+        .select(['id', 'telegram_id', 'login', 'name', 'address', 'phone'])
         .where({ telegram_id });
 
       return user[0];

@@ -5,10 +5,9 @@ const logger = require('../../logger')(__filename);
 async function getAllRecievers(ctx) {
   try {
     const recievers = await api.get(`/recievers`);
-
     const buttons = recievers.map((rec) => {
       return [
-        Markup.button.callback(rec.login, `trash_types ${rec.id}`),
+        Markup.button.callback(rec.name, `trash_types ${rec.telegram_id}`),
         Markup.button.callback(`Узнать больше`, `get_reciever ${rec.id}`),
       ];
     });
@@ -28,12 +27,12 @@ async function getRecieverById(ctx) {
 
     const button = Markup.button.callback(
       `Какой мусор они принимают?`,
-      `trash_types ${reciever.id}`,
+      `trash_types ${reciever.telegram_id}`,
     );
 
     ctx.answerCbQuery();
     ctx.reply(
-      `${reciever.login}\nАдреса: ${reciever.address}\nТелефон: ${reciever.phone}\n`,
+      `${reciever.name}\nАдрес: ${reciever.address}\nТелефон: ${reciever.phone}\n`,
       Markup.inlineKeyboard([button]),
     );
   } catch (error) {

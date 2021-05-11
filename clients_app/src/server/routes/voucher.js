@@ -15,7 +15,7 @@ voucher.post(
   aHdlr(async (req, res) => vouchersController.createVoucher(req, res)),
 );
 
-voucher.put(
+voucher.get(
   '/:id/activate',
   aHdlr(async (req, res) => vouchersController.activateVoucher(req, res)),
 );

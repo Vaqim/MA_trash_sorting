@@ -4,7 +4,7 @@ const logger = require('../../logger')(__filename);
 async function getOrganizations() {
   try {
     const res = await knex
-      .select(['id', 'login', 'name', 'phone', 'address'])
+      .select(['id', 'login', 'name', 'phone', 'address', 'telegram_id'])
       .from('organizations');
 
     return res;
@@ -28,7 +28,7 @@ async function createOrganization(data) {
 async function getOrganizationById(id) {
   try {
     const [res] = await knex('organizations')
-      .select(['id', 'login', 'name', 'phone', 'address'])
+      .select(['telegram_id', 'id', 'login', 'name', 'phone', 'address'])
       .where({ id });
 
     return res;

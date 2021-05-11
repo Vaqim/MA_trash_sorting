@@ -8,7 +8,7 @@ async function getAllOrganizations(ctx) {
 
     const buttons = organizations.map((org) => {
       return [
-        Markup.button.callback(org.name, `services ${org.id}`),
+        Markup.button.callback(org.name, `services ${org.telegram_id}`),
         Markup.button.callback(`Узнать больше`, `get_organization ${org.id}`),
       ];
     });
@@ -29,7 +29,10 @@ async function getOrganizationById(ctx) {
     const id = data.split(' ')[1];
     const organization = await api.get(`/organization/${id}`);
 
-    const button = Markup.button.callback('Что я могу купить?', `services ${organization.id}`);
+    const button = Markup.button.callback(
+      'Что я могу купить?',
+      `services ${organization.telegram_id}`,
+    );
 
     ctx.answerCbQuery();
     ctx.reply(

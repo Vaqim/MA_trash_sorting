@@ -53,8 +53,11 @@ async function activateVoucher(req, res) {
 
     if (!id) throw new HTTPError('ID required!', 400);
 
-    await db.activateVoucher(id);
-
+    const voucher = await db.activateVoucher(id);
+    if (!voucher.length) throw new HTTPError('Voucher activated!', 400);
+    const date = new Date();
+    const usableTo = Date.parse(voucher.usable_to);
+    if (date.getTime() > usableTo) throw new HTTPError('Voucher expired!', 400);
     res.status(202).send();
   } catch (error) {
     res.status(error.status).json({ error: error.message });
