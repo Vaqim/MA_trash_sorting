@@ -8,6 +8,7 @@ exports.up = async (knex) => {
     table.string('password').notNullable();
     table.string('phone', 13).nullable();
     table.string('address').nullable();
+    table.string('telegram_id').unique().notNullable();
     table.timestamps(true, true);
   });
 };

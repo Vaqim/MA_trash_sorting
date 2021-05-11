@@ -91,11 +91,11 @@ async function authenticate(req, res) {
 
 async function increasePoints(req, res) {
   try {
-    const { clientId, pointsAmount } = req.body;
+    const { login, pointsAmount } = req.body;
 
-    if (!clientId || !pointsAmount) throw new HTTPError('Id and amount of points required!', 400);
+    if (!login || !pointsAmount) throw new HTTPError('Id and amount of points required!', 400);
 
-    await db.increasePoints(clientId, pointsAmount);
+    await db.increasePoints(login, pointsAmount);
 
     res.status(202).send();
   } catch (error) {

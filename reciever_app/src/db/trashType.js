@@ -52,8 +52,6 @@ class TrashTypeDB {
         .where({ reciever_id })
         .whereNull('deleted_at');
 
-      if (!Object.keys(trashTypes).length) throw new HTTPError('Trash types wasn`t found', 404);
-
       return trashTypes;
     } catch (error) {
       logger.warn(error);

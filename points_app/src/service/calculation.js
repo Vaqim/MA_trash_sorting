@@ -1,7 +1,8 @@
 function calculatePoints(trashItems) {
-  return trashItems
-    .map((trashItem) => trashItem.modifier * trashItem.weigth * 100)
+  const total = trashItems
+    .map((trashItem) => trashItem.modifier * trashItem.weight * 100)
     .reduce((acc, reducer) => acc + reducer);
+  return Math.ceil(total);
 }
 
 module.exports = { calculatePoints };

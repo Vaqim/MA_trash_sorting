@@ -4,10 +4,15 @@ const logger = require('../../logger')(__filename);
 
 async function createTrashType(req, res) {
   try {
-    if (!req.body.name || !req.body.modifier || !req.params.reciever_id)
+    console.log('Body', req.body);
+    console.log('params', req.params);
+    if (!req.body.name || !req.body.modifier || !req.body.telegram_id)
       throw new HTTPError('Name, modifier and reciever ID required', 400);
 
-    const trashType = await TrashTypeDB.createTrashType(req.body, req.params.reciever_id);
+    const telegramId = req.body.telegram_id;
+    delete req.body.telegram_id;
+
+    const trashType = await TrashTypeDB.createTrashType(req.body, telegramId);
 
     logger.debug(trashType, 'Created trash type');
 

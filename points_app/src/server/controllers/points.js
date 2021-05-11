@@ -20,8 +20,8 @@ async function calculatePoints(req, res) {
 
 async function addPoints(req, res) {
   try {
-    const { clientId, pointsAmount } = req.body;
-    if (!clientId || !pointsAmount) throw generateError('Bad request', 'BadRequestError');
+    const { login, pointsAmount } = req.body;
+    if (!login || !pointsAmount) throw generateError('Bad request', 'BadRequestError');
 
     await clientApi.post('/clients/add_points', req.body);
 

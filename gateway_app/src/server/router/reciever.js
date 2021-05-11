@@ -20,6 +20,8 @@ recievers.get(
   asyncHandler(async (req, res) => multipurposeController.get(req, res, recieverApi)),
 );
 
+recievers.get('/bot/:id', async (req, res) => multipurposeController.get(req, res, recieverApi));
+
 recievers.use(forbiddenRoute);
 
 recievers.put(
