@@ -6,9 +6,9 @@ const bot = new Telegraf(config.botToken);
 
 bot.start(client.createUser);
 
-bot.hears('Мой баланс \u{1F4B5}', client.getUser);
-bot.hears('Я хочу что-то купить \u{1F911}', organization.getAllOrganizations);
-bot.hears('Информация про пункты здачи мусора \u{1F914}', reciever.getAllRecievers);
+bot.hears('Мій баланс \u{1F4B5}', client.getUser);
+bot.hears('Я хочу щось купити \u{1F911}', organization.getAllOrganizations);
+bot.hears('Інформація про пункти здачі сміття \u{1F914}', reciever.getAllRecievers);
 
 bot.action(/^[get_organization]+( (.)+)?$/, organization.getOrganizationById);
 bot.action(/^[services]+( (.)+)?$/, organization.getServicesByOrgId);

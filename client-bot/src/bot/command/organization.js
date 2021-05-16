@@ -9,16 +9,13 @@ async function getAllOrganizations(ctx) {
     const buttons = organizations.map((org) => {
       return [
         Markup.button.callback(org.name, `services ${org.telegram_id}`),
-        Markup.button.callback(`Узнать больше`, `get_organization ${org.id}`),
+        Markup.button.callback(`Дізнатися більше`, `get_organization ${org.id}`),
       ];
     });
 
-    ctx.reply(
-      'Окей, выбери организацию у которой хочешь что-то купить',
-      Markup.inlineKeyboard(buttons),
-    );
+    ctx.reply('Окей, обери організацію у якої хочеш щось купити', Markup.inlineKeyboard(buttons));
   } catch (error) {
-    ctx.reply(`Не могу получить организации с сервера`);
+    ctx.reply(`Не можу отримати організацію`);
     logger.error(error.message || error);
   }
 }
@@ -30,7 +27,7 @@ async function getOrganizationById(ctx) {
     const organization = await api.get(`/organization/${id}`);
 
     const button = Markup.button.callback(
-      'Что я могу купить?',
+      'Що я можу купити?',
       `services ${organization.telegram_id}`,
     );
 
@@ -40,7 +37,7 @@ async function getOrganizationById(ctx) {
       Markup.inlineKeyboard([button]),
     );
   } catch (error) {
-    ctx.reply(`Не могу получить организацию с сервера`);
+    ctx.reply(`Не можу отримати організацію`);
     logger.error(error.message || error);
   }
 }
@@ -55,14 +52,14 @@ async function getServicesByOrgId(ctx) {
     const buttons = services.map((ser) => {
       return [
         Markup.button.callback(`${ser.name}: ${ser.price}`, `buy ${ser.id}`),
-        Markup.button.callback(`Узнать больше`, `get_service ${ser.id}`),
+        Markup.button.callback(`Дізнатися більше`, `get_service ${ser.id}`),
       ];
     });
 
     ctx.answerCbQuery();
-    ctx.reply('Отлично, теперь выбери что хочешь получить:', Markup.inlineKeyboard(buttons));
+    ctx.reply('Тепер вибери що хочеш отримати:', Markup.inlineKeyboard(buttons));
   } catch (error) {
-    ctx.reply(`Не могу получить сервисы`);
+    ctx.reply(`Не можу отримати сервіси`);
     logger.error(error.message || error);
   }
 }
@@ -74,17 +71,17 @@ async function getServiceById(ctx) {
 
     const service = await api.get(`/organization/services/${id}`);
 
-    const button = Markup.button.callback('Покупаю!', `buy ${service.id}`);
+    const button = Markup.button.callback('Купую!', `buy ${service.id}`);
 
     ctx.answerCbQuery();
     ctx.reply(
-      `${service.name}\nЦена: ${service.price}\nОписание: ${
-        service.description ? service.description : 'Кажеться здесь ничего не написано \u{1F615}'
+      `${service.name}\nЦiна: ${service.price}\nОпис: ${
+        service.description ? service.description : 'Здається тут нічого не написано \u{1F615}'
       }\n`,
       Markup.inlineKeyboard([button]),
     );
   } catch (error) {
-    ctx.reply(`Не могу получить сервис с сервера`);
+    ctx.reply(`Не можу отримати сервіс`);
     logger.error(error.message || error);
   }
 }

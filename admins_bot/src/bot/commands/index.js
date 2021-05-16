@@ -8,10 +8,10 @@ const api = require('../api');
 async function defineUser(ctx) {
   ctx.wizard.state.creationData = {};
   await ctx.reply(
-    'Кто это?',
+    'Хто це?',
     Markup.inlineKeyboard([
-      Markup.button.callback('Организация', 'organization'),
-      Markup.button.callback('Точка приема мусора', 'reciever'),
+      Markup.button.callback('Організація', 'organization'),
+      Markup.button.callback('Точка прийому сміття', 'reciever'),
     ]),
   );
   return ctx.wizard.next();
@@ -28,23 +28,23 @@ async function findUserOrSetName(ctx) {
   ctx.answerCbQuery();
   if (typeof data === 'object') {
     const currentKeyboard = type === 'organization' ? orgKeyboard : recKeyboard;
-    await ctx.reply('Такой пользователь уже существует', currentKeyboard);
+    await ctx.reply('Такий користувач вже існує', currentKeyboard);
     return ctx.scene.leave();
   }
   ctx.wizard.state.creationData.userType = type;
-  await ctx.reply('Теперь введите название');
+  await ctx.reply('Тепер введіть назву');
   return ctx.wizard.next();
 }
 
 async function setPhone(ctx) {
   ctx.wizard.state.creationData.name = ctx.message.text;
-  await ctx.reply('Теперь введите номер телефона, по которому можна обратиться к организации');
+  await ctx.reply('Тепер введіть номер телефону, за яким можна звернутися до організації');
   return ctx.wizard.next();
 }
 
 async function setAddress(ctx) {
   ctx.wizard.state.creationData.phone = ctx.message.text;
-  await ctx.reply('Теперь введите адресс по которому можна вас найти');
+  await ctx.reply('Тепер введіть адресу за якою можна вас знайти');
   return ctx.wizard.next();
 }
 
@@ -57,11 +57,14 @@ async function registerUser(ctx) {
     const data = await api.post('/auth/registration', ctx.wizard.state.creationData);
     const currentKeyboard =
       ctx.wizard.state.creationData.userType === 'organization' ? orgKeyboard : recKeyboard;
-    await ctx.reply(`Отлично!\nНазвание: ${data.name}\nПароль: ${data.password}`, currentKeyboard);
+    await ctx.reply(
+      `Ось вашi даннi!\nНазва: ${data.login}\nПароль: ${data.password}`,
+      currentKeyboard,
+    );
     return ctx.scene.leave();
   } catch (error) {
     logger.error(error);
-    return ctx.reply('Что-то не получилось');
+    return ctx.reply('Не вдалося створити користувача');
   }
 }
 

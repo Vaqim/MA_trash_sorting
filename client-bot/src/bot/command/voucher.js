@@ -13,14 +13,14 @@ async function activateVoucher(ctx) {
     const usableTo = Date.parse(voucher.usable_to);
 
     if (voucher.status !== 'pending' || date.getTime() > usableTo)
-      throw new Error('Купон использован');
+      throw new Error('Купон використаний');
 
     await api.put(`/clients/voucher/${id}/activate`);
 
     ctx.deleteMessage(ctx.update.callback_query.message.id);
-    ctx.reply('Купон потрачен!');
+    ctx.reply('Купон витрачений!');
   } catch (error) {
-    ctx.reply(`Не могу активировать купон!`);
+    ctx.reply(`Не можу активувати купон!`);
     logger.error(error.message || error);
   }
 }

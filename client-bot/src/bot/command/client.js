@@ -4,9 +4,9 @@ const generateUser = require('../../service/generateUser');
 const logger = require('../../logger')(__filename);
 
 const keyboard = Markup.keyboard([
-  'Я хочу что-то купить \u{1F911}',
-  'Мой баланс \u{1F4B5}',
-  'Информация про пункты здачи мусора \u{1F914}',
+  'Я хочу щось купити \u{1F911}',
+  'Мій баланс \u{1F4B5}',
+  'Інформація про пункти здачі сміття \u{1F914}',
 ]).resize();
 
 async function createUser(ctx) {
@@ -16,7 +16,7 @@ async function createUser(ctx) {
     const user = await api.post(`/auth/registration`, data);
 
     ctx.reply(
-      `Привет! \u{1F44B} Вот твои данные\nLogin: ${user.login}\nPassword: ${user.password}`,
+      `Привіт! \u{1F44B} Ось твої дані\nЛогiн: ${user.login}\nПароль: ${user.password}`,
       keyboard,
     );
   } catch (error) {
@@ -31,9 +31,9 @@ async function getUser(ctx) {
 
     const user = await api.get(`/clients/bot/${id}`);
 
-    ctx.reply(`У тебя сейчас ${user.balance} балов`);
+    ctx.reply(`У тебе зараз ${user.balance} балів`);
   } catch (error) {
-    ctx.reply(`К сожалению не получилось найти пользователя`);
+    ctx.reply(`На жаль не вийшло знайти користувача`);
     logger.error(error.message || error);
   }
 }

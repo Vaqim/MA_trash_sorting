@@ -26,14 +26,14 @@ voucher.get(
       await multipurposeController.get(req, res, clientApi);
       await axios.get(
         `https://api.telegram.org/bot${botToken}/editMessageText?chat_id=${chat_id}&message_id=${message_id}&text=${encodeURI(
-          'Купон использован!',
+          'Купон використаний!',
         )}`,
       );
     } catch (error) {
       const { chat_id } = req.query;
       await axios.get(
         `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chat_id}&text=${encodeURI(
-          'Купон уже был активирован или уже не действителен!',
+          'Купон вже був активований або вже не дійсний!',
         )}`,
       );
       res.status(406).send();

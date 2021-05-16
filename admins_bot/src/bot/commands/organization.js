@@ -7,7 +7,7 @@ const api = require('../api');
 async function changeOrganizationStart(ctx) {
   try {
     const message = await ctx.reply(
-      `Введите название, если хотите пропустить нажмите на кнопку:`,
+      `Введіть назву, якщо хочете пропустити натисніть на кнопку:`,
       skipKeyboard,
     );
 
@@ -18,7 +18,7 @@ async function changeOrganizationStart(ctx) {
     return ctx.wizard.next();
   } catch (error) {
     logger.warn(error);
-    await ctx.reply('Прозошла ошибка', orgKeyboard);
+    await ctx.reply('Сталася помилка, спробуйте пізніше', orgKeyboard);
     return ctx.scene.leave();
   }
 }
@@ -39,7 +39,7 @@ async function changeOrganizationPhone(ctx) {
     return ctx.wizard.next();
   } catch (error) {
     logger.warn(error);
-    await ctx.reply('Прозошла ошибка', orgKeyboard);
+    await ctx.reply('Сталася помилка, спробуйте пізніше', orgKeyboard);
     return ctx.scene.leave();
   }
 }
@@ -53,14 +53,14 @@ async function changeOrganizationAddress(ctx) {
     if (ctx.message) ctx.wizard.state.updateOrganization.phone = ctx.message.text;
     ctx.telegram.editMessageReplyMarkup(chatId, messageId);
 
-    const message = await ctx.reply(`Адрес:`, skipKeyboard);
+    const message = await ctx.reply(`Адреса:`, skipKeyboard);
 
     ctx.wizard.state.mainMessage = message;
 
     return ctx.wizard.next();
   } catch (error) {
     logger.warn(error);
-    await ctx.reply('Прозошла ошибка', orgKeyboard);
+    await ctx.reply('Сталася помилка, спробуйте пізніше', orgKeyboard);
     return ctx.scene.leave();
   }
 }
@@ -83,17 +83,17 @@ async function changeOrganizationEnd(ctx) {
       );
 
       ctx.wizard.state.mainMessage = await ctx.reply(
-        `Организация изменёна!\nНазвание: ${organization.name}\nТелефон: ${organization.phone}\nАдрес: ${organization.address}`,
+        `Організація змінена!\nНазва: ${organization.name}\nТелефон: ${organization.phone}\nАдреса: ${organization.address}`,
         orgKeyboard,
       );
     } else {
-      ctx.wizard.state.mainMessage = await ctx.reply(`Изменения не были внесены`, orgKeyboard);
+      ctx.wizard.state.mainMessage = await ctx.reply(`Зміни не були внесені`, orgKeyboard);
     }
 
     return ctx.scene.leave();
   } catch (error) {
     logger.warn(error);
-    await ctx.reply('Не удалось изменить организацию, попробуйте позже', orgKeyboard);
+    await ctx.reply('Не вдалося змінити організацію, спробуйте пізніше', orgKeyboard);
     return ctx.scene.leave();
   }
 }
@@ -110,14 +110,14 @@ async function changeServiceStart(ctx) {
     });
 
     if (!buttons.length) {
-      await ctx.reply('Кажеться у вас пока что нет сервисов, сначала создайте их', orgKeyboard);
+      await ctx.reply('Здається у вас поки що немає сервісів, спочатку створіть їх', orgKeyboard);
       return ctx.scene.leave();
     }
 
     buttons.push([Markup.button.callback('Выйти', `leave`)]);
     if (mainMessage) {
       ctx.editMessageText(
-        'Выберете сервис, который вы хотите изменить:',
+        'Оберіть сервіс, який ви хочете змінити:',
         Markup.inlineKeyboard(buttons),
       );
 
@@ -126,7 +126,7 @@ async function changeServiceStart(ctx) {
     }
 
     const message = await ctx.reply(
-      'Выберете сервис, который вы хотите изменить:',
+      'Оберіть сервіс, який ви хочете змінити:',
       Markup.inlineKeyboard(buttons),
     );
 
@@ -134,7 +134,7 @@ async function changeServiceStart(ctx) {
     return ctx.wizard.next();
   } catch (error) {
     logger.warn(error);
-    await ctx.reply('Не удалось получить сервисы, попробуйте позже', orgKeyboard);
+    await ctx.reply('Не вдалося отримати сервіси, спробуйте пізніше', orgKeyboard);
     return ctx.scene.leave();
   }
 }
@@ -150,7 +150,7 @@ async function changeServiceName(ctx) {
     ctx.wizard.state.serviceId = serviceId;
     ctx.answerCbQuery();
     const message = await ctx.editMessageText(
-      `Отлично, тепер я буду спрашивать что поменять, а ты отвечай.\nЕсли не хочешь менять этот пункт просто нажми на кнопку.\nИ так название:`,
+      `Почнемо! Тепер я буду питати що змінити\nЯкщо не хочеш міняти цей пункт просто натисни на кнопку\nНазва:`,
       skipKeyboard,
     );
 
@@ -159,7 +159,7 @@ async function changeServiceName(ctx) {
     return ctx.wizard.next();
   } catch (error) {
     logger.warn(error);
-    await ctx.reply('Прозошла ошибка', orgKeyboard);
+    await ctx.reply('Сталася помилка, спробуйте пізніше', orgKeyboard);
     return ctx.scene.leave();
   }
 }
@@ -173,14 +173,14 @@ async function changeServicePrice(ctx) {
     if (ctx.message) ctx.wizard.state.updateService.name = ctx.message.text;
     ctx.telegram.editMessageReplyMarkup(chatId, messageId);
 
-    const message = await ctx.reply(`Цена:`, skipKeyboard);
+    const message = await ctx.reply(`Ціна:`, skipKeyboard);
 
     ctx.wizard.state.mainMessage = message;
 
     return ctx.wizard.next();
   } catch (error) {
     logger.warn(error);
-    await ctx.reply('Прозошла ошибка', orgKeyboard);
+    await ctx.reply('Сталася помилка, спробуйте пізніше', orgKeyboard);
     return ctx.scene.leave();
   }
 }
@@ -194,14 +194,14 @@ async function changeServiceDesc(ctx) {
     if (ctx.message) ctx.wizard.state.updateService.price = ctx.message.text;
     ctx.telegram.editMessageReplyMarkup(chatId, messageId);
 
-    const message = await ctx.reply(`Описание:`, skipKeyboard);
+    const message = await ctx.reply(`Опис:`, skipKeyboard);
 
     ctx.wizard.state.mainMessage = message;
 
     return ctx.wizard.next();
   } catch (error) {
     logger.warn(error);
-    await ctx.reply('Прозошла ошибка', orgKeyboard);
+    await ctx.reply('Сталася помилка, спробуйте пізніше', orgKeyboard);
     return ctx.scene.leave();
   }
 }
@@ -225,17 +225,17 @@ async function changeServiceEnd(ctx) {
       );
 
       ctx.wizard.state.mainMessage = await ctx.reply(
-        `Сервис изменён!\nНазвание: ${service.name}\nЦена: ${service.price}\nОписание: ${service.description}`,
+        `Сервіс змінений!\nНазва: ${service.name}\nЦіна: ${service.price}\nОпис: ${service.description}`,
         skipKeyboard,
       );
     } else {
-      ctx.wizard.state.mainMessage = await ctx.reply(`Изменения не были внесены`, skipKeyboard);
+      ctx.wizard.state.mainMessage = await ctx.reply(`Зміни не були внесені`, skipKeyboard);
     }
 
     return ctx.wizard.selectStep(0);
   } catch (error) {
     logger.warn(error);
-    await ctx.reply('Не удалось изменить сервис, попробуйте позже', orgKeyboard);
+    await ctx.reply('Не вдалося змінити сервіс, спробуйте пізніше', orgKeyboard);
     return ctx.scene.leave();
   }
 }
@@ -252,14 +252,14 @@ async function getServices(ctx) {
     });
 
     if (!buttons.length) {
-      await ctx.reply('Кажеться у вас пока что нет сервисов, сначала создайте их', orgKeyboard);
+      await ctx.reply('Здається у вас поки що немає сервісів, спочатку створіть їх', orgKeyboard);
       return ctx.scene.leave();
     }
 
     buttons.push([Markup.button.callback('Выйти', `leave`)]);
     if (mainMessage) {
       await ctx.editMessageText(
-        'Выберете сервис, который хотите просмотреть:',
+        'Оберіть сервіс, який хочете переглянути:',
         Markup.inlineKeyboard(buttons),
       );
 
@@ -268,7 +268,7 @@ async function getServices(ctx) {
     }
 
     const message = await ctx.reply(
-      'Выберете сервис, который хотите просмотреть:',
+      'Оберіть сервіс, який хочете переглянути::',
       Markup.inlineKeyboard(buttons),
     );
 
@@ -277,7 +277,7 @@ async function getServices(ctx) {
     return ctx.wizard.next();
   } catch (error) {
     logger.warn(error);
-    await ctx.reply('Не удалось получить сервисы, попробуйте позже', orgKeyboard);
+    await ctx.reply('Не вдалося отримати сервіси, спробуйте пізніше', orgKeyboard);
     return ctx.scene.leave();
   }
 }
@@ -291,7 +291,7 @@ async function getServiceInfo(ctx) {
     const service = await api.get(`/organization/services/${serviceId}`);
 
     await ctx.editMessageText(
-      `Название: ${service.name}\nЦена: ${service.price}\nОписание: ${
+      `Назва: ${service.name}\nЦiна: ${service.price}\nОпис: ${
         service.description ? service.description : '-'
       }`,
       skipKeyboard,
@@ -300,7 +300,7 @@ async function getServiceInfo(ctx) {
     return ctx.wizard.selectStep(0);
   } catch (error) {
     logger.warn(error);
-    await ctx.reply('Не удалось получить сервис, попробуйте позже', orgKeyboard);
+    await ctx.reply('Не вдалося отримати сервіси, спробуйте пізніше', orgKeyboard);
     return ctx.scene.leave();
   }
 }
@@ -316,15 +316,15 @@ async function deleteServiceStart(ctx) {
     });
 
     if (!buttons.length) {
-      await ctx.reply('Кажеться у вас пока что нет сервисов, сначала создайте их', orgKeyboard);
+      await ctx.reply('Здається у вас поки що немає сервісів, спочатку створіть їх', orgKeyboard);
       return ctx.scene.leave();
     }
 
-    buttons.push([Markup.button.callback('Выйти', `leave`)]);
+    buttons.push([Markup.button.callback('Вийти', `leave`)]);
 
     if (mainMessage) {
       await ctx.editMessageText(
-        'Выберете сервис, который хотите удалить:',
+        'Оберіть сервіс, який хочете видалити:',
         Markup.inlineKeyboard(buttons),
       );
 
@@ -332,7 +332,7 @@ async function deleteServiceStart(ctx) {
     }
 
     const message = await ctx.reply(
-      'Выберете сервис, который хотите удалить:',
+      'Оберіть сервіс, який хочете видалити:',
       Markup.inlineKeyboard(buttons),
     );
     ctx.wizard.state.mainMessage = message;
@@ -340,7 +340,7 @@ async function deleteServiceStart(ctx) {
     return ctx.wizard.next();
   } catch (error) {
     logger.warn(error);
-    await ctx.reply('Не удалось получить сервисы, попробуйте позже', orgKeyboard);
+    await ctx.reply('Не вдалося отримати сервіси, спробуйте пізніше', orgKeyboard);
     return ctx.scene.leave();
   }
 }
@@ -354,12 +354,12 @@ async function deleteServiceEnd(ctx) {
 
     await api.del(`/organization/services/${serviceId}`);
     ctx.answerCbQuery();
-    await ctx.editMessageText(`Сервис успешно удалён!`, skipKeyboard);
+    await ctx.editMessageText(`Сервіс успішно вилучено!`, skipKeyboard);
 
     return ctx.wizard.selectStep(0);
   } catch (error) {
     logger.warn(error);
-    await ctx.reply('Не удалось удалить сервис, попробуйте позже', orgKeyboard);
+    await ctx.reply('Не вдалося отримати сервіси, спробуйте пізніше', orgKeyboard);
     return ctx.scene.leave();
   }
 }
@@ -367,11 +367,11 @@ async function deleteServiceEnd(ctx) {
 async function setServiceName(ctx) {
   try {
     ctx.wizard.state.creationData = {};
-    await ctx.reply('Название вашего сервиса:');
+    await ctx.reply('Назва вашого сервісу:');
     return ctx.wizard.next();
   } catch (error) {
     logger.error(error);
-    await ctx.reply('Произошла ошибка', orgKeyboard);
+    await ctx.reply('Сталася помилка, спробуйте пізніше', orgKeyboard);
     return ctx.scene.leave();
   }
 }
@@ -379,11 +379,11 @@ async function setServiceName(ctx) {
 async function setServicePrice(ctx) {
   try {
     ctx.wizard.state.creationData.name = ctx.message.text;
-    await ctx.reply('Теперь укажите цену в балах:');
+    await ctx.reply('Тепер вкажіть ціну в балах:');
     return ctx.wizard.next();
   } catch (error) {
     logger.error(error);
-    await ctx.reply('Произошла ошибка', orgKeyboard);
+    await ctx.reply('Сталася помилка, спробуйте пізніше', orgKeyboard);
     return ctx.scene.leave();
   }
 }
@@ -392,7 +392,7 @@ async function setServiceDesc(ctx) {
   try {
     ctx.wizard.state.creationData.price = ctx.message.text;
     const message = await ctx.reply(
-      'Последний шаг!\nНапишите краткое описание (вы можете пропустить этот шаг нажав на кнопку):',
+      'Останній крок!\nНапишіть короткий опис (ви можете пропустити цей крок натиснувши на кнопку):',
       skipKeyboard,
     );
 
@@ -400,7 +400,7 @@ async function setServiceDesc(ctx) {
     return ctx.wizard.next();
   } catch (error) {
     logger.error(error);
-    await ctx.reply('Произошла ошибка', orgKeyboard);
+    await ctx.reply('Сталася помилка, спробуйте пізніше', orgKeyboard);
     return ctx.scene.leave();
   }
 }
@@ -414,7 +414,7 @@ async function createServiceEnd(ctx) {
 
     const data = await api.post('/organization/services', ctx.wizard.state.creationData);
     await ctx.reply(
-      `Так, сервис создан:\nНазвание: ${data.name}\nЦена: ${data.price}\nОписание: ${
+      `Так, сервіс створений:\nНазва: ${data.name}\nЦiна: ${data.price}\nОпис: ${
         data.description ? data.description : '-'
       }`,
       orgKeyboard,
@@ -422,7 +422,7 @@ async function createServiceEnd(ctx) {
     return ctx.scene.leave();
   } catch (error) {
     logger.warn(error);
-    await ctx.reply('Не удалось создать сервис, попробуйте позже', orgKeyboard);
+    await ctx.reply('Не вдалося отримати сервіси, спробуйте пізніше', orgKeyboard);
     return ctx.scene.leave();
   }
 }

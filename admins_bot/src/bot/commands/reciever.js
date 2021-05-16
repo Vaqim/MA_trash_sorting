@@ -7,11 +7,11 @@ const api = require('../api');
 async function setTrashTypeName(ctx) {
   try {
     ctx.wizard.state.creationData = {};
-    await ctx.reply('Ведите название: ');
+    await ctx.reply('Введіть назву: ');
     return ctx.wizard.next();
   } catch (error) {
     logger.error(error);
-    await ctx.reply('Произошла ошибка', recKeyboard);
+    await ctx.reply('Сталася помилка, спробуйте пізніше', recKeyboard);
     return ctx.scene.leave();
   }
 }
@@ -19,11 +19,11 @@ async function setTrashTypeName(ctx) {
 async function setTrashTypeModifier(ctx) {
   try {
     ctx.wizard.state.creationData.name = ctx.message.text;
-    await ctx.reply('Укажите коефициент стоимости: ');
+    await ctx.reply('Вкажіть коефіцієнт вартості: ');
     return ctx.wizard.next();
   } catch (error) {
     logger.error(error);
-    await ctx.reply('Произошла ошибка', recKeyboard);
+    await ctx.reply('Сталася помилка, спробуйте пізніше', recKeyboard);
     return ctx.scene.leave();
   }
 }
@@ -39,13 +39,13 @@ async function createTrashTypeEnd(ctx) {
     );
     logger.debug('new trash type', data);
     await ctx.reply(
-      `Вы создали новый тип мусора\nНазвание: ${data.name}\nКоефициент: ${data.modifier}`,
+      `Ви створили новий тип сміття\nНазва: ${data.name}\nКоефіцієнт: ${data.modifier}`,
       recKeyboard,
     );
     return ctx.scene.leave();
   } catch (error) {
     logger.error(error);
-    await ctx.reply('Не удалось создать тип мусора, попробуйте позже', recKeyboard);
+    await ctx.reply('Не вдалося створити тип сміття, спробуйте пізніше', recKeyboard);
     return ctx.scene.leave();
   }
 }
@@ -62,14 +62,17 @@ async function getTrashTypes(ctx) {
     });
 
     if (!buttons.length) {
-      await ctx.reply('Кажется у вас пока что нет позиций, сначала создайте их', recKeyboard);
+      await ctx.reply(
+        'Здається у вас поки що немає типiв смiття, спочатку створіть їх',
+        recKeyboard,
+      );
       return ctx.scene.leave();
     }
 
     buttons.push([Markup.button.callback('Выйти', `leave`)]);
     if (mainMessage) {
       await ctx.editMessageText(
-        'Выберете позицию, которую хотите просмотреть:',
+        'Оберіть позицію, яку хочете переглянути:',
         Markup.inlineKeyboard(buttons),
       );
 
@@ -78,7 +81,7 @@ async function getTrashTypes(ctx) {
     }
 
     const message = await ctx.reply(
-      'Выберете позицию, которую хотите просмотреть:',
+      'Оберіть позицію, яку хочете переглянути:',
       Markup.inlineKeyboard(buttons),
     );
 
@@ -87,7 +90,7 @@ async function getTrashTypes(ctx) {
     return ctx.wizard.next();
   } catch (error) {
     logger.error(error);
-    await ctx.reply('Не удалось получить типы мусора, попробуйте позже', recKeyboard);
+    await ctx.reply('Не вдалося отримати типи сміття, спробуйте пізніше', recKeyboard);
     return ctx.scene.leave();
   }
 }
@@ -101,7 +104,7 @@ async function getTrashTypeInfo(ctx) {
     const trashType = await api.get(`/trash_types/${trashId}`);
 
     await ctx.editMessageText(
-      `Тип: ${trashType.name}\nКоефициент: ${trashType.modifier}`,
+      `Тип: ${trashType.name}\nКоефіцієнт: ${trashType.modifier}`,
       skipKeyboard,
     );
 
@@ -125,23 +128,23 @@ async function changeTrashTypeStart(ctx) {
     });
 
     if (!buttons.length) {
-      await ctx.reply('Кажется у вас пока что нет типов мусора, сначала создайте их', recKeyboard);
+      await ctx.reply(
+        'Здається у вас поки що немає типів сміття, спочатку створіть їх',
+        recKeyboard,
+      );
       return ctx.scene.leave();
     }
 
     buttons.push([Markup.button.callback('Выйти', `leave`)]);
     if (mainMessage) {
-      ctx.editMessageText(
-        'Выберете тип, который вы хотите изменить:',
-        Markup.inlineKeyboard(buttons),
-      );
+      ctx.editMessageText('Оберіть тип, який ви хочете змінити:', Markup.inlineKeyboard(buttons));
 
       ctx.answerCbQuery();
       return ctx.wizard.next();
     }
 
     const message = await ctx.reply(
-      'Выберете тип мусора, который вы хотите изменить:',
+      'Оберіть тип, який ви хочете змінити:',
       Markup.inlineKeyboard(buttons),
     );
 
@@ -149,7 +152,7 @@ async function changeTrashTypeStart(ctx) {
     return ctx.wizard.next();
   } catch (error) {
     logger.error(error);
-    await ctx.reply('Не удалось получить типы мусора, попробуйте позже', recKeyboard);
+    await ctx.reply('Не вдалося отримати типи сміття, спробуйте пізніше', recKeyboard);
     return ctx.scene.leave();
   }
 }
@@ -165,7 +168,7 @@ async function changeTrashTypeName(ctx) {
     ctx.wizard.state.trashTypeId = trashTypeId;
     ctx.answerCbQuery();
     const message = await ctx.reply(
-      `Отлично, тепер я буду спрашивать что поменять, а ты отвечай.\nЕсли не хочешь менять этот пункт просто на кнопку.\nИ так название:`,
+      `Почнемо! Тепер я буду питати що змінити\nЯкщо не хочеш міняти цей пункт просто натисни на кнопку\nНазва:`,
       skipKeyboard,
     );
 
@@ -174,7 +177,7 @@ async function changeTrashTypeName(ctx) {
     return ctx.wizard.next();
   } catch (error) {
     logger.error(error);
-    await ctx.reply('Произошла ошибка', recKeyboard);
+    await ctx.reply('Сталася помилка, спробуйте пізніше', recKeyboard);
     return ctx.scene.leave();
   }
 }
@@ -188,14 +191,14 @@ async function changeTrashTypeModifier(ctx) {
     if (ctx.message) ctx.wizard.state.updateTrashType.name = ctx.message.text;
     ctx.telegram.editMessageReplyMarkup(chatId, messageId);
 
-    const message = await ctx.reply(`Коефициент:`, skipKeyboard);
+    const message = await ctx.reply(`Коефіцієнт:`, skipKeyboard);
 
     ctx.wizard.state.mainMessage = message;
 
     return ctx.wizard.next();
   } catch (error) {
     logger.error(error);
-    await ctx.reply('Произошла ошибка', recKeyboard);
+    await ctx.reply('Сталася помилка, спробуйте пізніше', recKeyboard);
     return ctx.scene.leave();
   }
 }
@@ -219,17 +222,17 @@ async function changeTrashTypeEnd(ctx) {
       );
 
       ctx.wizard.state.mainMessage = await ctx.reply(
-        `Тип изменён!\nНазвание: ${trashType.name}\nКоефициент: ${trashType.modifier}`,
+        `Тип змінений!\nНазва: ${trashType.name}\nКоефіцієнт: ${trashType.modifier}`,
         skipKeyboard,
       );
     } else {
-      ctx.wizard.state.mainMessage = await ctx.reply(`Изменения не были внесены`, skipKeyboard);
+      ctx.wizard.state.mainMessage = await ctx.reply(`Зміни не були внесені`, skipKeyboard);
     }
 
     return ctx.wizard.selectStep(0);
   } catch (error) {
     logger.error(error);
-    await ctx.reply('Не удалось изменить тип мусора, попробуйте позже', recKeyboard);
+    await ctx.reply('Не вдалося змінити тип сміття, спробуйте пізніше', recKeyboard);
     return ctx.scene.leave();
   }
 }
@@ -245,7 +248,10 @@ async function deleteTrashTypeStart(ctx) {
     });
 
     if (!buttons.length) {
-      await ctx.reply('Кажется у вас пока что нет типоу, сначала создайте их', recKeyboard);
+      await ctx.reply(
+        'Здається у вас поки що немає типiв смiття, спочатку створіть їх',
+        recKeyboard,
+      );
       return ctx.scene.leave();
     }
 
@@ -253,7 +259,7 @@ async function deleteTrashTypeStart(ctx) {
 
     if (mainMessage) {
       await ctx.editMessageText(
-        'Выберите тип, который хотите удалить:',
+        'Оберіть тип, який хочете видалити:',
         Markup.inlineKeyboard(buttons),
       );
 
@@ -261,7 +267,7 @@ async function deleteTrashTypeStart(ctx) {
     }
 
     const message = await ctx.reply(
-      'Выберете тип, который хотите удалить:',
+      'Оберіть тип, який хочете видалити:',
       Markup.inlineKeyboard(buttons),
     );
     ctx.wizard.state.mainMessage = message;
@@ -269,7 +275,7 @@ async function deleteTrashTypeStart(ctx) {
     return ctx.wizard.next();
   } catch (error) {
     logger.error(error);
-    await ctx.reply('Не удалось получить типы мусора, попробуйте позже', recKeyboard);
+    await ctx.reply('Не вдалося отримати типи сміття, спробуйте пізніше', recKeyboard);
     return ctx.scene.leave();
   }
 }
@@ -283,12 +289,12 @@ async function deleteTrashTypeEnd(ctx) {
 
     await api.del(`/trash_types/${trashId}`);
     ctx.answerCbQuery();
-    await ctx.editMessageText(`Тип мусора успешно удалён!`, skipKeyboard);
+    await ctx.editMessageText(`Тип сміття успішно вилучено!`, skipKeyboard);
 
     return ctx.wizard.selectStep(0);
   } catch (error) {
     logger.error(error);
-    await ctx.reply('Не удалось удалить тип мусора, попробуйте позже', recKeyboard);
+    await ctx.reply('Не вдалося видалити тип сміття, спробуйте пізніше', recKeyboard);
     return ctx.scene.leave();
   }
 }
@@ -304,17 +310,20 @@ async function choosingTrashTypes(ctx) {
     });
 
     if (!buttons.length) {
-      await ctx.reply('Кажется у вас пока что нет типоу, сначала создайте их', recKeyboard);
+      await ctx.reply(
+        'Здається у вас поки що немає типiв смiття, спочатку створіть їх',
+        recKeyboard,
+      );
       return ctx.scene.leave();
     }
 
     buttons.push([
-      Markup.button.callback('Рассчитать', `calculate`),
-      Markup.button.callback('Выйти', `leave`),
+      Markup.button.callback('Розрахувати', `calculate`),
+      Markup.button.callback('Вийти', `leave`),
     ]);
 
     const message = await ctx.reply(
-      'Выберите тип мусора, если вы закончили добавлять мусор нажмите "Рассчитать"',
+      'Оберіть тип сміття, якщо ви закінчили додавати сміття натисніть "Розрахувати"',
       Markup.inlineKeyboard(buttons),
     );
 
@@ -328,44 +337,50 @@ async function choosingTrashTypes(ctx) {
     return ctx.wizard.next();
   } catch (error) {
     logger.error(error);
-    await ctx.reply('Не удалось получить типы мусора, попробуйте позже', recKeyboard);
+    await ctx.reply('Не вдалося отримати типи сміття, спробуйте пізніше', recKeyboard);
     return ctx.scene.leave();
   }
 }
 
 async function setTrashWeightOrCalculatePoints(ctx) {
-  const { mainMessage } = ctx.wizard.state;
-  const { data } = ctx.update.callback_query;
-  if (data === 'leave') return deleteMessage(ctx, mainMessage.id, recKeyboard);
-  if (data === 'calculate') {
-    try {
-      const { trashTypes } = ctx.wizard.state;
-      const points = await api.post(`/points/calculate`, trashTypes);
-      await ctx.reply(
-        `Количество балов: ${points.points}\nВведите ник пользователя, которому хотите начислить баллы`,
-      );
+  try {
+    const { mainMessage } = ctx.wizard.state;
+    const { data } = ctx.update.callback_query;
+    if (data === 'leave') return deleteMessage(ctx, mainMessage.id, recKeyboard);
+    if (data === 'calculate') {
+      try {
+        const { trashTypes } = ctx.wizard.state;
+        const points = await api.post(`/points/calculate`, trashTypes);
+        await ctx.reply(
+          `Кількість балів: ${points.points}\nВведіть нік користувача, якому хочете нарахувати бали`,
+        );
 
-      ctx.wizard.state.points = points.points;
-      return ctx.wizard.next();
+        ctx.wizard.state.points = points.points;
+        return ctx.wizard.next();
+      } catch (error) {
+        logger.error(error);
+        await ctx.reply('Не вдалося розрахувати тип сміття', recKeyboard);
+        return ctx.scene.leave();
+      }
+    }
+    try {
+      const trashId = data.split(' ')[1];
+
+      const trashType = await api.get(`/trash_types/${trashId}`);
+
+      ctx.wizard.state.trash = { name: trashType.name, modifier: trashType.modifier };
+
+      await ctx.reply('Введіть вагу сміття в кг');
+
+      return ctx.wizard.selectStep(0);
     } catch (error) {
       logger.error(error);
-      await ctx.reply('Не удалось удалить тип мусора, попробуйте позже', recKeyboard);
+      await ctx.reply('Не вдалося знайти тип сміття, спробуйте пізніше', recKeyboard);
       return ctx.scene.leave();
     }
-  }
-  try {
-    const trashId = data.split(' ')[1];
-
-    const trashType = await api.get(`/trash_types/${trashId}`);
-
-    ctx.wizard.state.trash = { name: trashType.name, modifier: trashType.modifier };
-
-    await ctx.reply('Введите вес мусора в кг');
-
-    return ctx.wizard.selectStep(0);
   } catch (error) {
     logger.error(error);
-    await ctx.reply('Не удалось найти тип мусора, попробуйте позже', recKeyboard);
+    await ctx.reply('Сталася помилка, спробуйте пізніше', recKeyboard);
     return ctx.scene.leave();
   }
 }
@@ -376,12 +391,12 @@ async function addPoints(ctx) {
 
     await api.post(`/points/add`, { login: ctx.message.text, pointsAmount: points });
 
-    await ctx.reply('Баллы успешно начислены', recKeyboard);
+    await ctx.reply('Бали успішно нараховані', recKeyboard);
 
     return ctx.scene.leave();
   } catch (error) {
     logger.error(error);
-    await ctx.reply('Не удалось начислить баллы, попробуйте позже', recKeyboard);
+    await ctx.reply('Не вдалося нарахувати бали, спробуйте пізніше', recKeyboard);
     return ctx.scene.leave();
   }
 }

@@ -4,7 +4,7 @@ const { url } = require('../../config');
 const api = require('../api');
 const logger = require('../../logger')(__filename);
 
-moment.locale('ru');
+moment.locale('ua');
 
 async function spendPoints(ctx) {
   try {
@@ -23,11 +23,9 @@ async function spendPoints(ctx) {
 
     ctx.answerCbQuery();
     const message = await ctx.reply(
-      `Круто!\nТы потратил ${service.price} на ${
+      `Круто!\nТи витратив ${service.price} на ${
         service.name
-      }\nНаслаждайся!\nЭтот купон действителен до\n${moment(voucher.usable_to).format(
-        'lll',
-      )} \u{270C}`,
+      }\nНасолоджуйся!\nЦей купон дійсний до\n${moment(voucher.usable_to).format('lll')} \u{270C}`,
     );
 
     const qr = await qrcode.toDataURL(
@@ -38,7 +36,7 @@ async function spendPoints(ctx) {
 
     await ctx.replyWithPhoto({ source: Buffer.from(qrBuffer, 'base64') });
   } catch (error) {
-    ctx.reply(`Боюсь у тебя не достаточно балов \u{1F614}`);
+    ctx.reply(`Боюся у тебе не досить балів \u{1F614}`);
     logger.error(error);
   }
 }
