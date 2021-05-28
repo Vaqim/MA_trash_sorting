@@ -1,0 +1,72 @@
+version: '3.7'
+services: 
+  db:
+    container_name: db
+    image: postgres:13.1-alpine
+    environment: 
+      POSTGRES_USER: main
+      POSTGRES_DB: main
+      POSTGRES_PASSWORD: main
+    ports: 
+      - 15432:5432
+    volumes: 
+      - ./.data:/var/lib/postgresql/data
+    
+  adminer: 
+    container_name: adminer
+    image: adminer
+    restart: always
+    ports: 
+      - 18080:8080
+  
+  organization_service: 
+    image: organization_service
+    build: 
+      context: ./organizations_app
+      dockerfile: Dockerfile
+    env_file: ./organizations_app/.env
+    depends_on: 
+      - "db"
+    restart: always
+
+  clients_service: 
+    image: clients_service
+    build: 
+      context: ./clients_app
+      dockerfile: Dockerfile
+    env_file: ./clients_app/.env
+    depends_on: 
+      - "db"
+    restart: always
+
+  points_service: 
+    image: points_service
+    build: 
+      context: ./points_app
+      dockerfile: Dockerfile
+    env_file: ./points_app/.env
+    depends_on: 
+      - "db"
+    restart: always
+
+  reciever_service: 
+    image: reciever_service
+    build: 
+      context: ./reciever_app
+      dockerfile: Dockerfile
+    env_file: ./reciever_app/.env
+    depends_on: 
+      - "db"
+    restart: always
+
+  gateway_service: 
+    image: gateway_service
+    build: 
+      context: ./gateway_app
+      dockerfile: Dockerfile
+    env_file: ./gateway_app/.env
+    depends_on: 
+      - "db"
+    ports: 
+      - 3000:3000
+    restart: always

@@ -1,0 +1,20 @@
+{
+  "name": "admins_bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./src/bot/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "dotenv": "^8.2.0",
+    "pino": "^6.11.3",
+    "pino-pretty": "^4.7.1",
+    "telegraf": "^4.3.0"
+  }
+}
